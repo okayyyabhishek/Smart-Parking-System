@@ -5,6 +5,7 @@
 
 import { requireAuth, logout } from '../core/auth.js';
 import { escapeHtml } from '../core/format.js';
+import { initTheme } from '../core/theme.js';
 
 export async function setupViewerShell(activeNavId) {
     // VIEWER, OPERATOR, and SUPER_ADMIN are all permitted to view the read-only portal
@@ -83,12 +84,13 @@ export async function setupViewerShell(activeNavId) {
                 <div class="topbar-right">
                     <button type="button" id="theme-toggle" class="btn-icon" aria-label="Toggle daylight or night theme" aria-pressed="false" title="Switch daylight/night mode">
                         <span class="theme-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                         </span>
                     </button>
                 </div>
             </div>
         `;
+        initTheme();
     }
 
     // Render Portal Footer with Working Navigation Links

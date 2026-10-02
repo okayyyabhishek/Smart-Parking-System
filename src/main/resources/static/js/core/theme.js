@@ -55,9 +55,9 @@ export function initTheme() {
 
     const toggleBtn = document.getElementById('theme-toggle');
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
+        toggleBtn.onclick = () => {
             toggleTheme();
-        });
+        };
     }
 
     // Listen to system preference changes if user hasn't set explicit preference
