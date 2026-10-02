@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Session History — Smart Parking Allocation System</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-operator.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="operator-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="operator-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>Parking Session History</h1>
+                            <span class="dsa-badge">Parking History · Bounded Deque &amp; Audit Trail · O(1) Push/Pop</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">
+                            Rolling 7-day operational log of admitted, parked, and exited vehicles with masked contact privacy.
+                        </p>
+                    </div>
+
+                    <button type="button" id="refresh-history-btn" class="btn btn-secondary btn-sm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        <span>Refresh Log</span>
+                    </button>
+                </div>
+
+                <!-- Search & Filter Toolbar -->
+                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
+                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                        <input type="text" id="history-search-input" class="form-input" placeholder="Search vehicle plate or slot..." style="width:280px;">
+                        
+                        <select id="history-status-filter" class="form-select" aria-label="Filter by Session Status">
+                            <option value="">All Sessions</option>
+                            <option value="ACTIVE">Active (Parked)</option>
+                            <option value="COMPLETED">Completed (Departed)</option>
+                        </select>
+                    </div>
+
+                    <div id="history-count-badge" class="dsa-badge">
+                        Showing 0 sessions
+                    </div>
+                </div>
+
+                <!-- History Table Container -->
+                <div id="history-table-container">
+                    <div class="text-muted" style="padding:var(--space-4);">Loading session records...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupOperatorShell } from '/js/operator/operator-shell.js';
+        import { api } from '/js/core/api.js';
+        import { DataTable } from '/js/core/table.js';
+        import { formatPlate, formatDuration, formatDateTime, escapeHtml } from '/js/core/format.js';
+
+        let sessionsData = [];
+        let dataTable = null;
+
+        async function init() {
+            await setupOperatorShell('history');
+            setupFilters();
+            await loadHistory();
+        }
+
+        async function loadHistory() {
+            try {
+                sessionsData = await api.get('/api/operator/parking/history');
+                renderTable();
+            } catch (err) {
+                console.error('Failed to load session history', err);
+            }
+        }
+
+        function getFilteredSessions() {
+            const query = (document.getElementById('history-search-input').value || '').trim().toLowerCase();
+            const statusFilter = document.getElementById('history-status-filter').value;
+
+            return sessionsData.filter(s => {
+                if (statusFilter && s.status !== statusFilter) return false;
+                if (query) {
+                    const matchPlate = s.vehicleNumber && s.vehicleNumber.toLowerCase().includes(query);
+                    const matchSlot = s.slotNumber && s.slotNumber.toLowerCase().includes(query);
+                    if (!matchPlate && !matchSlot) return false;
+                }
+                return true;
+            });
+        }
+
+        function renderTable() {
+            const container = document.getElementById('history-table-container');
+            if (!container) return;
+
+            const filtered = getFilteredSessions();
+            document.getElementById('history-count-badge').textContent = `Showing ${filtered.length} of ${sessionsData.length} records`;
+
+            if (!dataTable) {
+                dataTable = new DataTable({
+                    container,
+                    caption: 'Parking Sessions Log (7-Day Rolling History)',
+                    dsaAnnotation: 'Parking History · Bounded Deque & Audit Trail · O(1) Push/Pop',
+                    emptyMessage: 'No matching parking sessions recorded.',
+                    columns: [
+                        {
+                            key: 'id',
+                            label: 'Session ID',
+                            sortable: true,
+                            render: (val) => `<span class="font-mono text-muted">#${val}</span>`
+                        },
+                        {
+                            key: 'vehicleNumber',
+                            label: 'Vehicle Plate',
+                            sortable: true,
+                            render: (val) => `<span class="plate-tag" style="font-size:0.8rem;">${escapeHtml(formatPlate(val))}</span>`
+                        },
+                        {
+                            key: 'vehicleType',
+                            label: 'Type',
+                            sortable: true,
+                            render: (val) => `<span class="slot-type-badge ${escapeHtml(val || 'CAR')}">${escapeHtml(val || 'CAR')}</span>`
+                        },
+                        {
+                            key: 'slotNumber',
+                            label: 'Bay #',
+                            sortable: true,
+                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || '—')}</span>`
+                        },
+                        {
+                            key: 'status',
+                            label: 'Status',
+                            sortable: true,
+                            render: (val) => {
+                                const isAct = val === 'ACTIVE';
+                                return `
+                                    <span class="status-chip ${isAct ? 'OCCUPIED' : 'AVAILABLE'}">
+                                        <span class="status-dot"></span>
+                                        <span>${isAct ? 'PARKED' : 'DEPARTED'}</span>
+                                    </span>
+                                `;
+                            }
+                        },
+                        {
+                            key: 'entryTime',
+                            label: 'Entry Time',
+                            sortable: true,
+                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                        },
+                        {
+                            key: 'exitTime',
+                            label: 'Exit Time',
+                            sortable: true,
+                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                        },
+                        {
+                            key: 'durationSeconds',
+                            label: 'Duration',
+                            sortable: true,
+                            render: (val, row) => {
+                                if (row.status === 'ACTIVE') {
+                                    const dur = Math.max(0, Math.floor((Date.now() - new Date(row.entryTime).getTime()) / 1000));
+                                    return `<span class="dsa-badge" style="color:var(--st-available);">⏱️ ${formatDuration(dur)} (Active)</span>`;
+                                }
+                                return `<span class="font-mono">${formatDuration(val)}</span>`;
+                            }
+                        },
+                        {
+                            key: 'contactMasked',
+                            label: 'Contact',
+                            render: (val) => `<span class="font-mono text-muted">${escapeHtml(val || '—')}</span>`
+                        },
+                        {
+                            key: 'actions',
+                            label: 'Action',
+                            render: (_, row) => row.status === 'ACTIVE'
+                                ? `<button type="button" class="btn btn-secondary btn-sm" onclick="window.openExitModal('${escapeHtml(row.vehicleNumber)}', () => window.location.reload())">Exit</button>`
+                                : '—'
+                        }
+                    ]
+                });
+            }
+
+            dataTable.setData(filtered);
+        }
+
+        function setupFilters() {
+            document.getElementById('history-search-input').addEventListener('input', () => renderTable());
+            document.getElementById('history-status-filter').addEventListener('change', () => renderTable());
+            document.getElementById('refresh-history-btn').addEventListener('click', loadHistory);
+        }
+
+        init();
+    </script>
+</body>
+</html>
