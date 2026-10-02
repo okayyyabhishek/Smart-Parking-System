@@ -24,8 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("dev")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 @DisplayName("ParkingService and Demo Scenario TRD §14 Integration Tests")
 class ParkingServiceIntegrationTest {
 
@@ -50,9 +49,19 @@ class ParkingServiceIntegrationTest {
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private VehicleService vehicleService;
+
     @BeforeEach
     void setUp() {
-        // DataSeeder populates baseline slots and vehicles
+        sessionRepository.deleteAll();
+        for (var slot : slotRepository.findAll()) {
+            slot.setStatus(SlotStatus.AVAILABLE);
+            slot.setCurrentVehicle(null);
+            slotRepository.save(slot);
+        }
+        waitingQueueService.rebuildFromDatabase();
+        vehicleService.warmLookupManager();
     }
 
     @Test

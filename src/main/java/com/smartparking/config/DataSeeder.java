@@ -26,7 +26,7 @@ import java.util.List;
  * All generated seed data is explicitly labelled as DEMO.
  */
 @Component
-@Profile("dev")
+@Profile({"dev", "test"})
 public class DataSeeder implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DataSeeder.class);
