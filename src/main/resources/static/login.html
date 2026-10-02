@@ -281,6 +281,12 @@
             });
         });
 
+        // Check for session expiry query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('expired') === 'true') {
+            showError('Your session has expired due to inactivity. Please sign in again.');
+        }
+
         // Form submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();

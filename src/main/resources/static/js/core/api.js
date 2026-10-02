@@ -70,7 +70,7 @@ export async function apiRequest(url, options = {}) {
         const isLoginPage = window.location.pathname.endsWith('login.html');
         if (!isLoginPage && !url.includes('/api/auth/login')) {
             const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
-            window.location.href = `/login.html?redirect=${redirectUrl}`;
+            window.location.href = `/login.html?redirect=${redirectUrl}&expired=true`;
             return;
         }
     }

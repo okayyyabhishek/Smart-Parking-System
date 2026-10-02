@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>404 — Not Found | Smart Parking Allocation System</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+
+    <style>
+        .error-layout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: var(--bg);
+        }
+
+        .error-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8) var(--space-4);
+        }
+
+        .error-card {
+            width: 100%;
+            max-width: 520px;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--accent);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-hairline);
+            padding: var(--space-8);
+            text-align: center;
+        }
+
+        .error-code-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            background-color: rgba(242, 183, 5, 0.15);
+            color: var(--text);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-4);
+            letter-spacing: 0.05em;
+        }
+
+        .error-title {
+            font-size: var(--text-2xl);
+            font-weight: 800;
+            margin-bottom: var(--space-2);
+            color: var(--text);
+        }
+
+        .error-desc {
+            font-size: var(--text-base);
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: var(--space-6);
+        }
+
+        .error-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body class="error-layout">
+    <header class="topbar">
+        <div class="portal-stripe admin"></div>
+        <div class="topbar-content" style="max-width: var(--layout-max-width); margin: 0 auto; padding: var(--space-3) var(--space-6); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                <a href="/login.html" style="text-decoration: none; font-weight: 800; font-size: var(--text-lg); color: var(--text);">Smart Parking</a>
+                <span class="dsa-badge">Routing</span>
+            </div>
+            <button type="button" id="theme-toggle-btn" class="btn-icon" aria-label="Toggle theme" title="Toggle theme">
+                <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="error-main">
+        <div class="error-card">
+            <div class="error-code-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                HTTP 404 · NOT FOUND
+            </div>
+
+            <h1 class="error-title">Bay or Route Not Found</h1>
+            <p class="error-desc">
+                The parking lane, portal view, or API endpoint you requested does not exist on this server. Please verify the URL or return to your designated workspace.
+            </p>
+
+            <div class="error-actions">
+                <button type="button" id="return-portal-btn" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Return to Workspace
+                </button>
+                <a href="/login.html" class="btn btn-secondary">
+                    Sign In Screen
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: var(--space-4); font-size: var(--text-xs); color: var(--text-muted); border-top: 1px solid var(--border);">
+        Smart Parking Allocation System &copy; 2026 · Pure Java 21 &amp; Spring Boot 3.3.4
+    </footer>
+
+    <script type="module">
+        import { getCurrentUser, getPortalHome } from '/js/core/auth.js';
+
+        document.getElementById('return-portal-btn').addEventListener('click', async () => {
+            const user = await getCurrentUser();
+            if (user && user.role) {
+                window.location.href = getPortalHome(user.role);
+            } else {
+                window.location.href = '/login.html';
+            }
+        });
+    </script>
+</body>
+</html>

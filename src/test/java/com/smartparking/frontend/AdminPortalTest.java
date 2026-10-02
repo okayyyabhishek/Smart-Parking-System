@@ -37,6 +37,9 @@ class AdminPortalTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private com.smartparking.repository.ParkingSlotRepository slotRepository;
+
     @Test
     @WithMockUser(username = "admin", roles = {"SUPER_ADMIN"})
     @DisplayName("Super Admin static portal views are accessible to SUPER_ADMIN role (HTTP 200)")
@@ -203,5 +206,7 @@ class AdminPortalTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.slotNumber").value("B-88"))
                 .andExpect(jsonPath("$.status").value("AVAILABLE"));
+
+        slotRepository.findBySlotNumber("B-88").ifPresent(slotRepository::delete);
     }
 }
