@@ -69,6 +69,8 @@ public class SecurityConfig {
                                 "/login.html",
                                 "/403.html",
                                 "/404.html",
+                                "/favicon.svg",
+                                "/favicon.ico",
                                 "/error",
                                 "/error/**",
                                 "/css/**",
