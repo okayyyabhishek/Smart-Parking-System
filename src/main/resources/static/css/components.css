@@ -33,6 +33,14 @@
     margin-left: -250px;
 }
 
+/* On desktop (>900px), hide topbar toggle button when sidebar is already open.
+   Only show topbar toggle button when the sidebar is collapsed! */
+@media (min-width: 901px) {
+    .app-shell:not(.sidebar-collapsed) .topbar-left #sidebar-toggle-btn {
+        display: none !important;
+    }
+}
+
 .sidebar-header {
     padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--border);
@@ -52,7 +60,7 @@
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     color: var(--text-muted);
     border: 1px solid var(--border);
     background-color: var(--surface-2);
@@ -228,7 +236,61 @@
 .topbar-right {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-2);
+}
+
+.topbar-right .btn-sm {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.topbar-right #theme-toggle,
+.topbar-right .theme-toggle-btn,
+.topbar-right .btn-icon {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-strong);
+    background-color: var(--surface);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    vertical-align: middle;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.topbar-right #theme-toggle:hover,
+.topbar-right .theme-toggle-btn:hover {
+    background-color: var(--surface-2);
+    border-color: var(--accent);
+}
+
+.theme-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.theme-icon svg {
+    display: block;
+    width: 16px;
+    height: 16px;
 }
 
 .content-body {
