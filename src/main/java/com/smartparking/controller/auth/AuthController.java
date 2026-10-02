@@ -101,6 +101,11 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/csrf")
+    public ResponseEntity<Void> csrf() {
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/me")
     public ResponseEntity<AuthMeResponse> me(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {

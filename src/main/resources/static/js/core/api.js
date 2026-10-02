@@ -18,16 +18,12 @@ export class ApiException extends Error {
  * Extracts CSRF token from document.cookie
  */
 export function getCsrfToken() {
-    const name = 'XSRF-TOKEN=';
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const parts = decodedCookie.split(';');
-    for (let part of parts) {
-        part = part.trim();
-        if (part.indexOf(name) === 0) {
-            return part.substring(name.length, part.length);
-        }
+    try {
+        const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
+        return match ? decodeURIComponent(match[1]) : '';
+    } catch (e) {
+        return '';
     }
-    return '';
 }
 
 /**
@@ -47,7 +43,13 @@ export async function apiRequest(url, options = {}) {
 
     // Attach CSRF header for mutating HTTP requests
     if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
-        const csrf = getCsrfToken();
+        let csrf = getCsrfToken();
+        if (!csrf && !url.includes('/api/auth/login') && !url.includes('/api/auth/csrf')) {
+            try {
+                await fetch('/api/auth/csrf', { credentials: 'same-origin' });
+                csrf = getCsrfToken();
+            } catch (ignored) {}
+        }
         if (csrf) {
             config.headers['X-XSRF-TOKEN'] = csrf;
         }
@@ -63,6 +65,17 @@ export async function apiRequest(url, options = {}) {
         response = await fetch(url, config);
     } catch (networkError) {
         throw new ApiException(0, 'NETWORK_ERROR', 'Unable to reach the server. Please check your connection.');
+    }
+
+    // Handle 403 Forbidden due to CSRF token expiration/desync — retry once with freshly minted token
+    if (response.status === 403 && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method) && !options._csrfRetried && !url.includes('/api/auth/login')) {
+        try {
+            await fetch('/api/auth/csrf', { credentials: 'same-origin' });
+            const freshCsrf = getCsrfToken();
+            if (freshCsrf) {
+                return await apiRequest(url, { ...options, _csrfRetried: true });
+            }
+        } catch (ignored) {}
     }
 
     // Handle 401 Unauthorized (session expired or unauthenticated)
