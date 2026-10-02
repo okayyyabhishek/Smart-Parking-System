@@ -56,8 +56,8 @@
 
                 <!-- Filter & Search Toolbar -->
                 <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1; min-width:280px;">
-                        <input type="text" id="slot-search-input" class="form-input" placeholder="Search slot ID (e.g. A-01), occupant, zone..." style="width:280px;">
+                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1; min-width:0;">
+                        <input type="text" id="slot-search-input" class="form-input toolbar-search" placeholder="Search bays, occupants, zones...">
                         
                         <select id="status-filter" class="form-select" aria-label="Filter by Status">
                             <option value="">All Statuses</option>
@@ -111,7 +111,7 @@
                             <span>Slot Identifier</span>
                             <span class="helper">Format: Zone-Number (e.g. B-01)</span>
                         </label>
-                        <input type="text" id="new-slot-number" class="form-input font-mono" required placeholder="B-01" pattern="^[A-Z]-\d{2,3}$" style="text-transform:uppercase;">
+                        <input type="text" id="new-slot-number" class="form-input font-mono" required pattern="^[A-Z]-\d{2,3}$" style="text-transform:uppercase;">
                     </div>
 
                     <div class="form-group">
@@ -127,10 +127,10 @@
                         </select>
                     </div>
 
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:var(--space-3);">
+                    <div class="form-row-2col">
                         <div class="form-group">
                             <label for="new-slot-zone" class="form-label">Zone</label>
-                            <input type="text" id="new-slot-zone" class="form-input" required placeholder="e.g. B" maxlength="5" style="text-transform:uppercase;">
+                            <input type="text" id="new-slot-zone" class="form-input" required maxlength="5" style="text-transform:uppercase;">
                         </div>
                         <div class="form-group">
                             <label for="new-slot-floor" class="form-label">Floor</label>

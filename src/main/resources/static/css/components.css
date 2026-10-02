@@ -207,8 +207,8 @@
    -------------------------------------------------------------------------- */
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+    gap: var(--space-3);
     margin-bottom: var(--space-6);
 }
 
@@ -256,8 +256,8 @@
    -------------------------------------------------------------------------- */
 .slot-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+    gap: var(--space-3);
     margin-bottom: var(--space-6);
 }
 
@@ -428,7 +428,9 @@
    -------------------------------------------------------------------------- */
 .table-container {
     width: 100%;
+    max-width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -438,6 +440,7 @@
 
 .data-table {
     width: 100%;
+    min-width: 580px;
     border-collapse: collapse;
     text-align: left;
     font-size: var(--text-sm);
@@ -936,6 +939,54 @@
 /* --------------------------------------------------------------------------
    15. MOBILE MENU & RESPONSIVE DRAWER (< 900px)
    -------------------------------------------------------------------------- */
+.brand-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+    transition: opacity var(--transition-fast) ease-in-out;
+}
+
+.brand-link:hover {
+    opacity: 0.88;
+}
+
+.brand-link:focus-visible {
+    outline: 2px solid var(--accent);
+}
+
+.phone-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color var(--transition-fast) ease-in-out;
+    white-space: nowrap;
+}
+
+.phone-link:hover, .phone-link:focus-visible {
+    text-decoration: underline;
+    color: var(--text);
+}
+
+.toolbar-search {
+    flex: 1 1 200px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.form-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+}
+
 .mobile-menu-toggle {
     display: none;
     margin-right: var(--space-2);
@@ -1011,7 +1062,7 @@
     }
 
     .topbar-content {
-        padding: var(--space-2) var(--space-4);
+        padding: var(--space-2) var(--space-3);
         flex-wrap: wrap;
         gap: var(--space-2);
     }
@@ -1031,5 +1082,44 @@
         flex-direction: column;
         align-items: flex-start;
         gap: var(--space-2);
+    }
+}
+
+@media (max-width: 768px) {
+    .topbar-left .dsa-badge {
+        display: none !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-row-2col {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar-right .btn-sm span:not(.badge) {
+        display: none;
+    }
+
+    .topbar-right .btn-sm {
+        padding: 0 var(--space-2);
+        min-width: 36px;
+        justify-content: center;
+    }
+
+    .modal-backdrop {
+        padding: var(--space-2);
+    }
+
+    .modal-body {
+        padding: var(--space-4);
+    }
+
+    .segmented-control {
+        flex-wrap: wrap;
+    }
+
+    .segmented-option {
+        flex: 1 1 calc(50% - var(--space-1));
+        justify-content: center;
     }
 }

@@ -19,11 +19,11 @@ export async function setupAdminShell(activeNavId) {
     if (sidebarEl) {
         sidebarEl.innerHTML = `
             <div class="sidebar-header">
-                <div>
-                    <div class="brand-badge" style="background-color: var(--accent); color: var(--on-accent); font-weight: 800;">MAIN CONTROL</div>
+                <a href="/admin/index.html" class="brand-link" title="Super Admin Console Dashboard">
+                    <div class="brand-badge" style="background-color: var(--accent); color: var(--on-accent); font-weight: 800; align-self: flex-start;">MAIN CONTROL</div>
                     <h2 class="brand-title">Smart Parking</h2>
                     <p class="brand-subtitle">Super Admin Console</p>
-                </div>
+                </a>
                 <button type="button" id="close-sidebar-btn" class="btn-icon sidebar-close-btn" aria-label="Close navigation drawer" style="display:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -135,10 +135,6 @@ export async function setupAdminShell(activeNavId) {
                     <a href="/operator/index.html" class="footer-link">Operator Gate</a>
                     <span class="footer-dot">·</span>
                     <a href="/viewer/index.html" class="footer-link">Public Board</a>
-                    <span class="footer-dot">·</span>
-                    <a href="/404.html" class="footer-link">404 Error View</a>
-                    <span class="footer-dot">·</span>
-                    <a href="/403.html" class="footer-link">403 Restricted</a>
                 </div>
             </div>
         `;
@@ -227,7 +223,7 @@ function injectExitModal() {
                             <span>Vehicle License Plate</span>
                             <span class="helper">e.g. PB10AB1234</span>
                         </label>
-                        <input type="text" id="exit-vehicle-plate" class="form-input" required autocomplete="off" placeholder="PB10AB1234" style="text-transform:uppercase;">
+                        <input type="text" id="exit-vehicle-plate" class="form-input" required autocomplete="off" style="text-transform:uppercase;">
                         <div id="exit-error-msg" class="form-error" style="display:none;"></div>
                     </div>
                 </div>

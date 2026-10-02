@@ -159,7 +159,10 @@
                     {
                         key: 'contact',
                         label: 'Contact (Unmasked)',
-                        render: (val) => `<span class="font-mono">${escapeHtml(val || '—')}</span>`
+                        render: (val) => {
+                            if (!val || val === '—') return '—';
+                            return `<a href="tel:${escapeHtml(val)}" class="phone-link" title="Call ${escapeHtml(val)}">📞 ${escapeHtml(val)}</a>`;
+                        }
                     },
                     {
                         key: 'waitingSince',

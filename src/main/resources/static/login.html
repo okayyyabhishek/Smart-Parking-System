@@ -165,13 +165,13 @@
     <header class="login-header-bar">
         <div class="portal-stripe admin"></div>
         <div class="login-header-content">
-            <div style="display:flex; align-items:center; gap:var(--space-3);">
+            <a href="/login.html" class="brand-link" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:var(--space-3);" title="Smart Parking Allocation System Login">
                 <div class="brand-badge">PORTAL ACCESS</div>
                 <div>
                     <h2 style="font-size:var(--text-base); margin:0; line-height:1.2;">Smart Parking Allocation System</h2>
                     <p style="font-size:var(--text-xs); color:var(--text-muted); margin:0;">DSA Academic Project · 3-Tier Role Gateway</p>
                 </div>
-            </div>
+            </a>
 
             <button type="button" id="theme-toggle" class="btn-icon" aria-label="Toggle daylight or night theme" aria-pressed="false" title="Switch daylight/night mode">
                 <span class="theme-icon">
@@ -196,13 +196,13 @@
             <form id="login-form" novalidate>
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" name="username" class="form-input" required autocomplete="username" autofocus placeholder="admin / operator / viewer">
+                    <input type="text" id="username" name="username" class="form-input" required autocomplete="username" autofocus>
                 </div>
 
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password" placeholder="••••••••••••">
+                        <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password">
                         <button type="button" id="toggle-password-btn" class="password-toggle-btn" aria-label="Show password" title="Show password">
                             <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -256,10 +256,6 @@
             <a href="/operator/index.html" class="footer-link">Operator Gate</a>
             <span>·</span>
             <a href="/admin/index.html" class="footer-link">Admin Control</a>
-            <span>·</span>
-            <a href="/404.html" class="footer-link">404 Error View</a>
-            <span>·</span>
-            <a href="/403.html" class="footer-link">403 Restricted</a>
         </div>
     </footer>
 

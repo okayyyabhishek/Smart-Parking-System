@@ -16,11 +16,11 @@ export async function setupViewerShell(activeNavId) {
     if (sidebarEl) {
         sidebarEl.innerHTML = `
             <div class="sidebar-header">
-                <div>
-                    <div class="brand-badge" style="background-color: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); font-weight: 800;">READ ONLY</div>
+                <a href="/viewer/index.html" class="brand-link" title="Public Viewer Terminal Overview">
+                    <div class="brand-badge" style="background-color: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); font-weight: 800; align-self: flex-start;">READ ONLY</div>
                     <h2 class="brand-title">Smart Parking</h2>
                     <p class="brand-subtitle">Public Viewer Terminal</p>
-                </div>
+                </a>
                 <button type="button" id="close-sidebar-btn" class="btn-icon sidebar-close-btn" aria-label="Close navigation drawer" style="display:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -109,10 +109,6 @@ export async function setupViewerShell(activeNavId) {
                     <a href="/operator/index.html" class="footer-link">Operator Gate</a>
                     <span class="footer-dot">·</span>
                     <a href="/admin/index.html" class="footer-link">Admin Control</a>
-                    <span class="footer-dot">·</span>
-                    <a href="/404.html" class="footer-link">404 Error View</a>
-                    <span class="footer-dot">·</span>
-                    <a href="/403.html" class="footer-link">403 Restricted</a>
                 </div>
             </div>
         `;

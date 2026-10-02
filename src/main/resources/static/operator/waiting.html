@@ -153,7 +153,10 @@
                     {
                         key: 'contactMasked',
                         label: 'Contact',
-                        render: (val) => `<span class="font-mono text-muted">${escapeHtml(val || '—')}</span>`
+                        render: (val) => {
+                            if (!val || val === '—') return '—';
+                            return `<span class="phone-link font-mono text-muted" style="cursor:default;" title="Protected Driver Contact">📞 ${escapeHtml(val)}</span>`;
+                        }
                     },
                     {
                         key: 'waitingSince',

@@ -47,7 +47,7 @@
                 <!-- Search & Filter Toolbar -->
                 <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
                     <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
-                        <input type="text" id="history-search-input" class="form-input" placeholder="Search vehicle plate or slot..." style="width:280px;">
+                        <input type="text" id="history-search-input" class="form-input toolbar-search" placeholder="Search plates or slots...">
                         
                         <select id="history-status-filter" class="form-select" aria-label="Filter by Session Status">
                             <option value="">All Sessions</option>
@@ -188,7 +188,10 @@
                         {
                             key: 'contactMasked',
                             label: 'Contact',
-                            render: (val) => `<span class="font-mono text-muted">${escapeHtml(val || '—')}</span>`
+                            render: (val) => {
+                                if (!val || val === '—') return '—';
+                                return `<span class="phone-link font-mono text-muted" style="cursor:default;" title="Protected Driver Contact">📞 ${escapeHtml(val)}</span>`;
+                            }
                         },
                         {
                             key: 'actions',

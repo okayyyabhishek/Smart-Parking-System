@@ -56,7 +56,7 @@
                 <!-- Filter & Search Toolbar -->
                 <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
                     <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
-                        <input type="text" id="user-search-input" class="form-input" placeholder="Search by username..." style="width:260px;">
+                        <input type="text" id="user-search-input" class="form-input toolbar-search" placeholder="Search by username...">
                         
                         <select id="user-role-filter" class="form-select" aria-label="Filter by Role">
                             <option value="">All Roles</option>
@@ -105,7 +105,7 @@
                             <span>Username</span>
                             <span class="helper">3–50 characters, letters &amp; numbers</span>
                         </label>
-                        <input type="text" id="new-username" class="form-input font-mono" required placeholder="e.g. op_northgate" minlength="3" maxlength="50" autocomplete="off">
+                        <input type="text" id="new-username" class="form-input font-mono" required minlength="3" maxlength="50" autocomplete="off">
                     </div>
 
                     <div class="form-group">
@@ -125,7 +125,7 @@
                             <span>Initial Temporary Password</span>
                             <span class="helper">Minimum 10 characters</span>
                         </label>
-                        <input type="password" id="new-password" class="form-input font-mono" required minlength="10" placeholder="••••••••••••" value="Temporary@123">
+                        <input type="password" id="new-password" class="form-input font-mono" required minlength="10">
                     </div>
 
                     <div class="form-group" style="margin-bottom:var(--space-2);">
@@ -168,7 +168,7 @@
                             <span>New Temporary Password</span>
                             <span class="helper">Minimum 10 characters</span>
                         </label>
-                        <input type="text" id="reset-pass-value" class="form-input font-mono" required minlength="10" value="Temp@Pass1234">
+                        <input type="password" id="reset-pass-value" class="form-input font-mono" required minlength="10">
                     </div>
 
                     <div id="reset-pass-error-msg" class="form-error" style="display:none;"></div>
