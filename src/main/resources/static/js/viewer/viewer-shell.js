@@ -19,7 +19,6 @@ export async function setupViewerShell(activeNavId) {
             <div class="sidebar-header">
                 <div class="sidebar-brand-row">
                     <a href="/viewer/index.html" class="brand-link" title="Public Viewer Terminal Overview">
-                        <div class="brand-badge" style="background-color: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); font-weight: 800; align-self: flex-start;">READ ONLY</div>
                         <h2 class="brand-title">Smart Parking</h2>
                         <p class="brand-subtitle">Public Viewer Terminal</p>
                     </a>
@@ -83,7 +82,6 @@ export async function setupViewerShell(activeNavId) {
                         </svg>
                     </button>
                     <span class="role-badge viewer">READ ONLY</span>
-                    <span class="dsa-badge">Public Telemetry · Zero PII Leakage</span>
                 </div>
                 <div class="topbar-right">
                     <button type="button" id="theme-toggle" class="btn-icon" aria-label="Toggle daylight or night theme" aria-pressed="false" title="Switch daylight/night mode">
@@ -107,7 +105,6 @@ export async function setupViewerShell(activeNavId) {
             <div class="footer-content">
                 <div class="footer-left">
                     <span>Smart Parking Allocation System &copy; ${new Date().getFullYear()} · Suhani Parashar</span>
-                    <span class="footer-badge">Java 21 · Spring Boot · DSA Core</span>
                 </div>
                 <div class="footer-links">
                     <a href="/viewer/index.html" class="footer-link">Public Board</a>

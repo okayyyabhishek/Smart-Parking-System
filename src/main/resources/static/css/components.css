@@ -81,17 +81,7 @@
 }
 
 .brand-badge {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-size: var(--text-xs);
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    background-color: var(--accent);
-    color: var(--on-accent);
-    padding: 2px 6px;
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--space-1);
+    display: none !important;
 }
 
 .brand-title {
@@ -780,18 +770,29 @@
    9. DSA MUTED CAPTION (Viva Feature)
    -------------------------------------------------------------------------- */
 .dsa-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    color: var(--text-muted);
-    background-color: var(--surface-2);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    border-radius: var(--radius-sm);
-    letter-spacing: 0.02em;
+    display: none !important;
+}
+
+#slots-count-badge,
+#history-count-badge,
+#users-count-badge {
+    display: inline-flex !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-family: var(--font-body) !important;
+    font-size: var(--text-xs) !important;
+    font-weight: 600 !important;
+    color: var(--text-muted) !important;
+}
+
+.dsa-badge[style*="--st-available"],
+.dsa-badge[style*="--st-waiting"] {
+    display: inline-flex !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-family: var(--font-body) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1004,14 +1005,7 @@
 }
 
 .footer-badge {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    padding: 1px 6px;
-    background-color: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    display: none !important;
 }
 
 .footer-links {

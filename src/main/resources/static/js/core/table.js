@@ -70,7 +70,6 @@ export class DataTable {
                     <caption>
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <span>${escapeHtml(this.caption)}</span>
-                            ${this.dsaAnnotation ? `<span class="dsa-badge">${escapeHtml(this.dsaAnnotation)}</span>` : ''}
                         </div>
                     </caption>
                     <thead>

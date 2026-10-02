@@ -33,7 +33,6 @@
                     <div>
                         <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
                             <h1>Gate Desk Overview</h1>
-                            <span class="dsa-badge">Real-Time State · O(1) Queue & Stack Operations</span>
                         </div>
                         <p class="text-muted" style="margin:0;">Live bay occupancy, quick gate operations, and recent departure tracking.</p>
                     </div>
@@ -69,7 +68,7 @@
                         <div class="kpi-card">
                             <span class="kpi-label">Waiting Queue</span>
                             <div class="kpi-value" id="kpi-waiting" style="color:var(--st-waiting);">—</div>
-                            <span class="kpi-subtext">PriorityQueue length · O(log n)</span>
+                            <span class="kpi-subtext">Vehicles waiting</span>
                         </div>
 
                         <div class="kpi-card">
@@ -84,7 +83,6 @@
                 <section style="margin-bottom:var(--space-6);" aria-labelledby="recent-exits-heading">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
                         <h3 id="recent-exits-heading" style="font-size:var(--text-base); margin:0;">Recent Exits (Stack LIFO)</h3>
-                        <span class="dsa-badge">ParkingHistoryStack · ArrayDeque · O(1) LIFO</span>
                     </div>
 
                     <div id="recent-exits-container" class="recent-exits-strip">

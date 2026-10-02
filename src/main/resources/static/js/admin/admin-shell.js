@@ -22,7 +22,6 @@ export async function setupAdminShell(activeNavId) {
             <div class="sidebar-header">
                 <div class="sidebar-brand-row">
                     <a href="/admin/index.html" class="brand-link" title="Super Admin Console Dashboard">
-                        <div class="brand-badge" style="background-color: var(--accent); color: var(--on-accent); font-weight: 800; align-self: flex-start;">MAIN CONTROL</div>
                         <h2 class="brand-title">Smart Parking</h2>
                         <p class="brand-subtitle">Super Admin Console</p>
                     </a>
@@ -101,7 +100,6 @@ export async function setupAdminShell(activeNavId) {
                         </svg>
                     </button>
                     <span class="role-badge admin">MAIN CONTROL</span>
-                    <span class="dsa-badge">Pure Java 21 · Super Admin Authority</span>
                 </div>
                 <div class="topbar-right">
                     <a href="/admin/entry.html" class="btn btn-primary btn-sm">
@@ -133,7 +131,6 @@ export async function setupAdminShell(activeNavId) {
             <div class="footer-content">
                 <div class="footer-left">
                     <span>Smart Parking Allocation System &copy; ${new Date().getFullYear()} · Suhani Parashar</span>
-                    <span class="footer-badge">Java 21 · Spring Boot · DSA Core</span>
                 </div>
                 <div class="footer-links">
                     <a href="/admin/index.html" class="footer-link">Admin Control</a>
