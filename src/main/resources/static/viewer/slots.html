@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Bay Availability — Smart Parking Allocation System</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-viewer.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="viewer-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="viewer-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>Facility Bay Availability</h1>
+                            <span class="dsa-badge">Slot Search · Linear Search · O(n)</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">Public status map showing available, occupied, and maintenance bays.</p>
+                    </div>
+
+                    <!-- View Mode Toggle -->
+                    <div style="display:flex; gap:var(--space-2); background:var(--surface-2); padding:3px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                        <button type="button" id="view-grid-btn" class="btn btn-secondary btn-sm" style="background:var(--surface);">
+                            <span>Grid Map</span>
+                        </button>
+                        <button type="button" id="view-table-btn" class="btn btn-secondary btn-sm" style="border-color:transparent;">
+                            <span>Data Table</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter & Search Toolbar -->
+                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
+                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1; min-width:280px;">
+                        <input type="text" id="slot-search-input" class="form-input" placeholder="Search slot ID (e.g. A-01), zone..." style="width:260px;">
+                        
+                        <select id="status-filter" class="form-select" aria-label="Filter by Status">
+                            <option value="">All Statuses</option>
+                            <option value="AVAILABLE">Available</option>
+                            <option value="OCCUPIED">Occupied</option>
+                            <option value="MAINTENANCE">Maintenance</option>
+                        </select>
+
+                        <select id="type-filter" class="form-select" aria-label="Filter by Type">
+                            <option value="">All Bay Types</option>
+                            <option value="NORMAL">NORMAL</option>
+                            <option value="LARGE">LARGE</option>
+                            <option value="EV">EV</option>
+                            <option value="ACCESSIBLE">ACCESSIBLE</option>
+                        </select>
+                    </div>
+
+                    <div id="slots-count-badge" class="dsa-badge" style="font-size:var(--text-xs);">
+                        Showing 0 bays
+                    </div>
+                </div>
+
+                <!-- Grid View Container -->
+                <div id="slots-grid-view" class="slot-grid">
+                    <div class="text-muted" style="padding:var(--space-4);">Loading bays...</div>
+                </div>
+
+                <!-- Table View Container (Initially Hidden) -->
+                <div id="slots-table-view" style="display:none;"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupViewerShell } from '/js/viewer/viewer-shell.js';
+        import { api } from '/js/core/api.js';
+        import { DataTable } from '/js/core/table.js';
+        import { escapeHtml } from '/js/core/format.js';
+
+        let allSlots = [];
+        let activeView = 'grid'; // 'grid' | 'table'
+        let dataTableInstance = null;
+
+        async function init() {
+            await setupViewerShell('slots');
+            setupViewToggle();
+            setupFilters();
+            await loadSlots();
+        }
+
+        async function loadSlots() {
+            try {
+                allSlots = await api.get('/api/viewer/slots');
+                renderCurrentView();
+            } catch (err) {
+                console.error('Failed to load slots', err);
+            }
+        }
+
+        function getFilteredSlots() {
+            const query = (document.getElementById('slot-search-input').value || '').trim().toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+
+            return allSlots.filter(s => {
+                if (statusFilter && s.status !== statusFilter) return false;
+                if (typeFilter && s.slotType !== typeFilter) return false;
+                if (query) {
+                    const matchNum = s.slotNumber.toLowerCase().includes(query);
+                    const matchZone = s.zone.toLowerCase().includes(query);
+                    if (!matchNum && !matchZone) return false;
+                }
+                return true;
+            });
+        }
+
+        function renderCurrentView() {
+            const filtered = getFilteredSlots();
+            document.getElementById('slots-count-badge').textContent = `Showing ${filtered.length} of ${allSlots.length} bays`;
+
+            if (activeView === 'grid') {
+                renderGridView(filtered);
+            } else {
+                renderTableView(filtered);
+            }
+        }
+
+        function renderGridView(slots) {
+            const container = document.getElementById('slots-grid-view');
+            if (!container) return;
+
+            if (slots.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3 class="empty-state-title">No Matching Parking Bays</h3>
+                        <p class="empty-state-text">Try modifying your search or filter options.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = slots.map(slot => {
+                const isMaint = slot.status === 'MAINTENANCE';
+
+                return `
+                    <div class="slot-tile ${isMaint ? 'maintenance' : ''}">
+                        <div class="slot-tile-header">
+                            <span class="slot-id">${escapeHtml(slot.slotNumber)}</span>
+                            <span class="slot-type-badge ${escapeHtml(slot.slotType)}">${escapeHtml(slot.slotType)}</span>
+                        </div>
+
+                        <div class="slot-tile-body">
+                            <div class="status-chip ${escapeHtml(slot.status)}">
+                                <span class="status-dot"></span>
+                                <span>${escapeHtml(slot.status)}</span>
+                            </div>
+                        </div>
+
+                        <div class="slot-tile-footer">
+                            <span class="text-muted">Zone ${escapeHtml(slot.zone)} · F${escapeHtml(slot.floor)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderTableView(slots) {
+            const container = document.getElementById('slots-table-view');
+            if (!container) return;
+
+            if (!dataTableInstance) {
+                dataTableInstance = new DataTable({
+                    container,
+                    caption: 'Public Facility Bay Directory',
+                    dsaAnnotation: 'Slot Search · Linear Search · O(n)',
+                    columns: [
+                        { key: 'slotNumber', label: 'Slot #', sortable: true },
+                        { 
+                            key: 'slotType', 
+                            label: 'Bay Type', 
+                            sortable: true,
+                            render: (val) => `<span class="slot-type-badge ${escapeHtml(val)}">${escapeHtml(val)}</span>`
+                        },
+                        { key: 'zone', label: 'Zone', sortable: true },
+                        { key: 'floor', label: 'Floor', sortable: true },
+                        { 
+                            key: 'status', 
+                            label: 'Status', 
+                            sortable: true,
+                            render: (val) => `
+                                <span class="status-chip ${escapeHtml(val)}">
+                                    <span class="status-dot"></span>
+                                    <span>${escapeHtml(val)}</span>
+                                </span>
+                            `
+                        }
+                    ]
+                });
+            }
+
+            dataTableInstance.setData(slots);
+        }
+
+        function setupViewToggle() {
+            const gridBtn = document.getElementById('view-grid-btn');
+            const tableBtn = document.getElementById('view-table-btn');
+            const gridContainer = document.getElementById('slots-grid-view');
+            const tableContainer = document.getElementById('slots-table-view');
+
+            gridBtn.addEventListener('click', () => {
+                activeView = 'grid';
+                gridBtn.style.background = 'var(--surface)';
+                gridBtn.style.borderColor = 'var(--border)';
+                tableBtn.style.background = 'transparent';
+                tableBtn.style.borderColor = 'transparent';
+
+                gridContainer.style.display = 'grid';
+                tableContainer.style.display = 'none';
+                renderCurrentView();
+            });
+
+            tableBtn.addEventListener('click', () => {
+                activeView = 'table';
+                tableBtn.style.background = 'var(--surface)';
+                tableBtn.style.borderColor = 'var(--border)';
+                gridBtn.style.background = 'transparent';
+                gridBtn.style.borderColor = 'transparent';
+
+                gridContainer.style.display = 'none';
+                tableContainer.style.display = 'block';
+                renderCurrentView();
+            });
+        }
+
+        function setupFilters() {
+            document.getElementById('slot-search-input').addEventListener('input', () => renderCurrentView());
+            document.getElementById('status-filter').addEventListener('change', () => renderCurrentView());
+            document.getElementById('type-filter').addEventListener('change', () => renderCurrentView());
+        }
+
+        init();
+    </script>
+</body>
+</html>
