@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to Smart Parking Allocation System. Role-based access control for Super Admin, Gate Operator, and Public Viewer.">
     <meta name="color-scheme" content="light dark">
     <title>Sign In — Smart Parking Allocation System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
@@ -244,8 +246,21 @@
     </main>
 
     <!-- Footer -->
-    <footer class="login-footer">
-        <div>Smart Parking Allocation System &copy; 2026 · Pure Java 21 & Spring Boot 3.3.4 · Academic Viva Demo</div>
+    <footer class="login-footer" style="text-align: center; padding: var(--space-4); border-top: 1px solid var(--border); font-size: var(--text-xs); color: var(--text-muted);">
+        <div style="margin-bottom: var(--space-2);">Smart Parking Allocation System &copy; 2026 · Pure Java 21 &amp; Spring Boot · Suhani Parashar</div>
+        <div style="display: flex; justify-content: center; gap: var(--space-3); flex-wrap: wrap;">
+            <a href="/login.html" class="footer-link">Sign In</a>
+            <span>·</span>
+            <a href="/viewer/index.html" class="footer-link">Public Board</a>
+            <span>·</span>
+            <a href="/operator/index.html" class="footer-link">Operator Gate</a>
+            <span>·</span>
+            <a href="/admin/index.html" class="footer-link">Admin Control</a>
+            <span>·</span>
+            <a href="/404.html" class="footer-link">404 Error View</a>
+            <span>·</span>
+            <a href="/403.html" class="footer-link">403 Restricted</a>
+        </div>
     </footer>
 
     <!-- Login Application Logic -->
@@ -337,13 +352,16 @@
                     </svg>
                 `;
 
+                let errMsg = 'Authentication failed. Please try again.';
                 if (err.status === 423) {
-                    showError(err.message || 'Account locked due to 5 consecutive failed attempts. Please try again in 5 minutes.');
+                    errMsg = err.message || 'Account locked due to 5 consecutive failed attempts. Please try again in 5 minutes.';
                 } else if (err.status === 401) {
-                    showError('Invalid username or password. Please verify credentials.');
-                } else {
-                    showError(err.message || 'Authentication failed. Please try again.');
+                    errMsg = 'Invalid username or password. Please verify credentials.';
+                } else if (err.message) {
+                    errMsg = err.message;
                 }
+                showError(errMsg);
+                toast.error(errMsg, 'Authentication Failed');
             }
         });
 

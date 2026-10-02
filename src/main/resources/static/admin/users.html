@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RBAC user and credential management console. Provision operators, assign roles, toggle account status, and manage security credentials.">
     <meta name="color-scheme" content="light dark">
     <title>User Management — Smart Parking Allocation System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
@@ -395,6 +397,7 @@
                 } catch (err) {
                     errorMsg.textContent = err.message || 'Failed to create user. Please check if username already exists.';
                     errorMsg.style.display = 'flex';
+                    toast.error(err.message || 'Failed to create user.', 'Creation Failed');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `<span>Create User Account</span>`;
@@ -443,6 +446,7 @@
                 } catch (err) {
                     errorMsg.textContent = err.message || 'Failed to reset password.';
                     errorMsg.style.display = 'flex';
+                    toast.error(err.message || 'Failed to reset password.', 'Reset Failed');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `<span>Apply New Password</span>`;

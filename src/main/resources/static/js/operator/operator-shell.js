@@ -19,9 +19,14 @@ export async function setupOperatorShell(activeNavId) {
     if (sidebarEl) {
         sidebarEl.innerHTML = `
             <div class="sidebar-header">
-                <div class="brand-badge" style="background-color: var(--st-available); color: #FFFFFF;">GATE DESK</div>
-                <h2 class="brand-title">Smart Parking</h2>
-                <p class="brand-subtitle">Operator Workspace</p>
+                <div>
+                    <div class="brand-badge" style="background-color: var(--st-available); color: #FFFFFF;">GATE DESK</div>
+                    <h2 class="brand-title">Smart Parking</h2>
+                    <p class="brand-subtitle">Operator Workspace</p>
+                </div>
+                <button type="button" id="close-sidebar-btn" class="btn-icon sidebar-close-btn" aria-label="Close navigation drawer" style="display:none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
 
             <nav class="sidebar-nav" aria-label="Operator Navigation">
@@ -72,6 +77,13 @@ export async function setupOperatorShell(activeNavId) {
             <div class="portal-stripe operator"></div>
             <div class="topbar-content">
                 <div class="topbar-left">
+                    <button type="button" id="mobile-nav-toggle" class="btn-icon mobile-menu-toggle" aria-label="Toggle navigation drawer" aria-expanded="false">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
                     <span class="role-badge operator">GATE DESK</span>
                     <span class="dsa-badge">Pure Java 21 · Spring Data JPA</span>
                 </div>
@@ -93,6 +105,73 @@ export async function setupOperatorShell(activeNavId) {
             </div>
         `;
     }
+
+    // Render Portal Footer with Working Navigation Links
+    const appMainEl = document.querySelector('.app-main');
+    if (appMainEl && !document.getElementById('portal-footer')) {
+        const footerEl = document.createElement('footer');
+        footerEl.id = 'portal-footer';
+        footerEl.className = 'app-footer';
+        footerEl.innerHTML = `
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span>Smart Parking Allocation System &copy; ${new Date().getFullYear()} · Suhani Parashar</span>
+                    <span class="footer-badge">Java 21 · Spring Boot · DSA Core</span>
+                </div>
+                <div class="footer-links">
+                    <a href="/operator/index.html" class="footer-link">Operator Gate</a>
+                    <span class="footer-dot">·</span>
+                    <a href="/viewer/index.html" class="footer-link">Public Board</a>
+                    <span class="footer-dot">·</span>
+                    <a href="/admin/index.html" class="footer-link">Admin Control</a>
+                    <span class="footer-dot">·</span>
+                    <a href="/404.html" class="footer-link">404 Error View</a>
+                    <span class="footer-dot">·</span>
+                    <a href="/403.html" class="footer-link">403 Restricted</a>
+                </div>
+            </div>
+        `;
+        appMainEl.appendChild(footerEl);
+    }
+
+    // Mobile menu drawer toggle logic
+    let backdrop = document.getElementById('sidebar-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'sidebar-backdrop';
+        backdrop.className = 'sidebar-backdrop';
+        document.body.appendChild(backdrop);
+    }
+
+    const toggleBtn = document.getElementById('mobile-nav-toggle');
+    const closeBtn = document.getElementById('close-sidebar-btn');
+
+    function toggleDrawer(open) {
+        if (!sidebarEl) return;
+        const shouldOpen = open !== undefined ? open : !sidebarEl.classList.contains('is-open');
+        sidebarEl.classList.toggle('is-open', shouldOpen);
+        backdrop.classList.toggle('is-visible', shouldOpen);
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(shouldOpen));
+        if (closeBtn) closeBtn.style.display = shouldOpen ? 'inline-flex' : 'none';
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', () => toggleDrawer());
+    if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
+    backdrop.addEventListener('click', () => toggleDrawer(false));
+
+    if (sidebarEl) {
+        sidebarEl.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 900) toggleDrawer(false);
+            });
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebarEl && sidebarEl.classList.contains('is-open')) {
+            toggleDrawer(false);
+        }
+    });
 
     // Attach Universal Exit Dialog
     injectExitModal();
@@ -211,6 +290,7 @@ function injectExitModal() {
         } catch (err) {
             errorMsg.textContent = err.message || 'Unable to release slot. Please verify the vehicle plate.';
             errorMsg.style.display = 'flex';
+            toast.error(err.message || 'Unable to release slot.', 'Release Failed');
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = `<span>Confirm Exit & Release</span>`;

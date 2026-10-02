@@ -15,6 +15,8 @@ html {
     font-size: 16px;
     -webkit-text-size-adjust: 100%;
     color-scheme: light dark;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 body {
@@ -28,6 +30,8 @@ body {
     transition: background-color var(--transition-fast), color var(--transition-fast);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 /* Tabular numbers for all stats, tables, and numeric displays */

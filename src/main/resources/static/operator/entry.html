@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vehicle admission and bay allocation console. Compute optimal slot compatibility using matrix priority ranking.">
     <meta name="color-scheme" content="light dark">
     <title>Park Vehicle — Smart Parking Allocation System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
@@ -56,6 +58,9 @@
                                 <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB08SUV9903" data-type="SUV" data-owner="Harpreet Singh" data-contact="9876540003" data-priority="NORMAL">
                                     🚙 Large SUV
                                 </button>
+                                <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB10AC8804" data-type="ACCESSIBLE" data-owner="Deepak Verma" data-contact="9876540004" data-priority="NORMAL">
+                                    ♿ Accessible Bay
+                                </button>
                                 <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB10EM0108" data-type="CAR" data-owner="City Hospital ER" data-contact="9876540108" data-priority="EMERGENCY">
                                     🚨 Emergency Priority
                                 </button>
@@ -84,17 +89,17 @@
                                         <span style="font-size:1.1rem;">🚗</span>
                                         <span>CAR</span>
                                     </button>
-                                    <button type="button" class="segmented-option" data-value="MOTORCYCLE" role="radio" aria-checked="false">
-                                        <span style="font-size:1.1rem;">🏍️</span>
-                                        <span>BIKE</span>
+                                    <button type="button" class="segmented-option" data-value="EV" role="radio" aria-checked="false">
+                                        <span style="font-size:1.1rem;">⚡</span>
+                                        <span>EV</span>
                                     </button>
                                     <button type="button" class="segmented-option" data-value="SUV" role="radio" aria-checked="false">
                                         <span style="font-size:1.1rem;">🚙</span>
                                         <span>SUV</span>
                                     </button>
-                                    <button type="button" class="segmented-option" data-value="EV" role="radio" aria-checked="false">
-                                        <span style="font-size:1.1rem;">⚡</span>
-                                        <span>EV</span>
+                                    <button type="button" class="segmented-option" data-value="ACCESSIBLE" role="radio" aria-checked="false">
+                                        <span style="font-size:1.1rem;">♿</span>
+                                        <span>ACCESSIBLE</span>
                                     </button>
                                 </div>
                             </div>
@@ -272,6 +277,7 @@
                 } catch (err) {
                     plateError.textContent = err.message || 'Unable to park vehicle. Please check input.';
                     plateError.style.display = 'flex';
+                    toast.error(err.message || 'Unable to park vehicle. Please check input.', 'Entry Failed');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `

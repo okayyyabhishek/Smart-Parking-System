@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Parking bays manager. Real-time slot status inspection, maintenance toggles, and manual administrative overrides.">
     <meta name="color-scheme" content="light dark">
     <title>Parking Bays Manager — Smart Parking Allocation System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
@@ -448,6 +450,7 @@
                 } catch (err) {
                     errorMsg.textContent = err.message || 'Failed to create slot. Check slot number format (e.g. B-01).';
                     errorMsg.style.display = 'flex';
+                    toast.error(err.message || 'Failed to create slot.', 'Creation Failed');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `<span>Save &amp; Activate Bay</span>`;
