@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Live parking bay availability map. Real-time visual telemetry of free, occupied, and EV-charging parking bays.">
     <meta name="color-scheme" content="light dark">
-    <title>Bay Availability — Smart Parking Allocation System</title>
+    <title>Bay Availability â€” Smart Parking Allocation System</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
@@ -31,7 +31,7 @@
                     <div>
                         <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
                             <h1>Facility Bay Availability</h1>
-                            <span class="dsa-badge">Slot Search · Linear Search · O(n)</span>
+                            <span class="dsa-badge">Slot Search Â· Linear Search Â· O(n)</span>
                         </div>
                         <p class="text-muted" style="margin:0;">Public status map showing available, occupied, and maintenance bays.</p>
                     </div>
@@ -171,7 +171,7 @@
                         </div>
 
                         <div class="slot-tile-footer">
-                            <span class="text-muted">Zone ${escapeHtml(slot.zone)} · F${escapeHtml(slot.floor)}</span>
+                            <span class="text-muted">Zone ${escapeHtml(slot.zone)} Â· F${escapeHtml(slot.floor)}</span>
                         </div>
                     </div>
                 `;
@@ -186,7 +186,7 @@
                 dataTableInstance = new DataTable({
                     container,
                     caption: 'Public Facility Bay Directory',
-                    dsaAnnotation: 'Slot Search · Linear Search · O(n)',
+                    dsaAnnotation: 'Slot Search Â· Linear Search Â· O(n)',
                     columns: [
                         { key: 'slotNumber', label: 'Slot #', sortable: true },
                         { 
@@ -254,5 +254,7 @@
 
         init();
     </script>
+    <script type="module" src="/js/core/cookie-banner.js"></script>
 </body>
 </html>
+

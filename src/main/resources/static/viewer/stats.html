@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Public facility analytics. Occupancy percentages, bay type distribution, and real-time utilization graphs.">
     <meta name="color-scheme" content="light dark">
-    <title>Facility Analytics — Smart Parking Allocation System</title>
+    <title>Facility Analytics â€” Smart Parking Allocation System</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
@@ -31,7 +31,7 @@
                     <div>
                         <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
                             <h1>Public Analytics &amp; Statistics</h1>
-                            <span class="dsa-badge">Metrics Engine · 100% Computed From DB · O(n)</span>
+                            <span class="dsa-badge">Metrics Engine Â· 100% Computed From DB Â· O(n)</span>
                         </div>
                         <p class="text-muted" style="margin:0;">
                             Performance telemetry, turnover statistics, and capacity allocation metrics computed directly from database records.
@@ -48,25 +48,25 @@
                 <div class="kpi-grid">
                     <div class="kpi-card highlight">
                         <span class="kpi-label">Total Vehicles Served</span>
-                        <div class="kpi-value" id="stat-served">—</div>
+                        <div class="kpi-value" id="stat-served">â€”</div>
                         <span class="kpi-subtext">Lifetime completed departures</span>
                     </div>
 
                     <div class="kpi-card">
                         <span class="kpi-label">Average Stay Duration</span>
-                        <div class="kpi-value" id="stat-duration" style="font-size:var(--text-2xl);">—</div>
+                        <div class="kpi-value" id="stat-duration" style="font-size:var(--text-2xl);">â€”</div>
                         <span class="kpi-subtext">Across departed vehicles</span>
                     </div>
 
                     <div class="kpi-card">
                         <span class="kpi-label">Highest Demand Bay</span>
-                        <div class="kpi-value" id="stat-slot" style="font-size:var(--text-2xl); font-family:var(--font-mono);">—</div>
+                        <div class="kpi-value" id="stat-slot" style="font-size:var(--text-2xl); font-family:var(--font-mono);">â€”</div>
                         <span class="kpi-subtext">Most frequently occupied bay</span>
                     </div>
 
                     <div class="kpi-card">
                         <span class="kpi-label">Prevalent Vehicle Class</span>
-                        <div class="kpi-value" id="stat-vehicletype" style="font-size:var(--text-2xl);">—</div>
+                        <div class="kpi-value" id="stat-vehicletype" style="font-size:var(--text-2xl);">â€”</div>
                         <span class="kpi-subtext">Most frequent vehicle type</span>
                     </div>
                 </div>
@@ -75,25 +75,25 @@
                 <div class="kpi-grid" style="margin-top:var(--space-4);">
                     <div class="kpi-card">
                         <span class="kpi-label">Current Parked</span>
-                        <div class="kpi-value" id="stat-parked" style="color:var(--st-occupied);">—</div>
+                        <div class="kpi-value" id="stat-parked" style="color:var(--st-occupied);">â€”</div>
                         <span class="kpi-subtext">Active vehicle sessions</span>
                     </div>
 
                     <div class="kpi-card">
                         <span class="kpi-label">Available Capacity</span>
-                        <div class="kpi-value" id="stat-available" style="color:var(--st-available);">—</div>
+                        <div class="kpi-value" id="stat-available" style="color:var(--st-available);">â€”</div>
                         <span class="kpi-subtext">Open for parking</span>
                     </div>
 
                     <div class="kpi-card">
                         <span class="kpi-label">Waiting Vehicles</span>
-                        <div class="kpi-value" id="stat-waiting" style="color:var(--st-waiting);">—</div>
+                        <div class="kpi-value" id="stat-waiting" style="color:var(--st-waiting);">â€”</div>
                         <span class="kpi-subtext">In waiting queue</span>
                     </div>
 
                     <div class="kpi-card">
                         <span class="kpi-label">Today's Traffic</span>
-                        <div class="kpi-value" id="stat-flow">—</div>
+                        <div class="kpi-value" id="stat-flow">â€”</div>
                         <span class="kpi-subtext" id="stat-flow-sub">Entries &amp; Exits</span>
                     </div>
                 </div>
@@ -202,5 +202,7 @@
 
         init();
     </script>
+    <script type="module" src="/js/core/cookie-banner.js"></script>
 </body>
 </html>
+

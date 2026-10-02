@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Public session history ledger with strict zero-PII privacy protection and masked license telemetry.">
     <meta name="color-scheme" content="light dark">
-    <title>Public Session History — Smart Parking Allocation System</title>
+    <title>Public Session History â€” Smart Parking Allocation System</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
@@ -31,7 +31,7 @@
                     <div>
                         <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
                             <h1>Public Parking History</h1>
-                            <span class="dsa-badge">Parking History · Bounded Deque &amp; Audit Trail · O(1) Push/Pop</span>
+                            <span class="dsa-badge">Parking History Â· Bounded Deque &amp; Audit Trail Â· O(1) Push/Pop</span>
                         </div>
                         <p class="text-muted" style="margin:0;">
                             Public audit ledger of parking sessions. All license plates are redacted and driver identities are omitted.
@@ -49,7 +49,7 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                     <div>
                         <strong>Masked Plate Standard:</strong>
-                        In compliance with data protection policies, vehicle plates are formatted as <code>PB10••••34</code> (preserving prefix and suffix while concealing internal digits).
+                        In compliance with data protection policies, vehicle plates are formatted as <code>PB10â€¢â€¢â€¢â€¢34</code> (preserving prefix and suffix while concealing internal digits).
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@
                 dataTable = new DataTable({
                     container,
                     caption: 'Public Facility Session Ledger (Redacted)',
-                    dsaAnnotation: 'Parking History · Bounded Deque & Audit Trail · O(1) Push/Pop',
+                    dsaAnnotation: 'Parking History Â· Bounded Deque & Audit Trail Â· O(1) Push/Pop',
                     emptyMessage: 'No matching parking sessions recorded.',
                     columns: [
                         {
@@ -154,7 +154,7 @@
                             key: 'slotNumber',
                             label: 'Bay #',
                             sortable: true,
-                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || '—')}</span>`
+                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || 'â€”')}</span>`
                         },
                         {
                             key: 'status',
@@ -189,7 +189,7 @@
                             render: (val, row) => {
                                 if (row.status === 'ACTIVE') {
                                     const dur = Math.max(0, Math.floor((Date.now() - new Date(row.entryTime).getTime()) / 1000));
-                                    return `<span class="dsa-badge" style="color:var(--st-available);">⏱️ ${formatDuration(dur)} (Active)</span>`;
+                                    return `<span class="dsa-badge" style="color:var(--st-available);">â±ï¸ ${formatDuration(dur)} (Active)</span>`;
                                 }
                                 return `<span class="font-mono">${formatDuration(val)}</span>`;
                             }
@@ -209,5 +209,7 @@
 
         init();
     </script>
+    <script type="module" src="/js/core/cookie-banner.js"></script>
 </body>
 </html>
+

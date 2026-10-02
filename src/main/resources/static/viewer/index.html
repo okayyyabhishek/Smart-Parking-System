@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Public parking terminal. Live bay availability, queue counts, tariffs, and zero-PII facility status.">
     <meta name="color-scheme" content="light dark">
-    <title>Public Terminal — Smart Parking Allocation System</title>
+    <title>Public Terminal â€” Smart Parking Allocation System</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
@@ -53,25 +53,25 @@
                     <div class="kpi-grid">
                         <div class="kpi-card highlight">
                             <span class="kpi-label">Available Bays</span>
-                            <div class="kpi-value" id="kpi-available" style="color:var(--st-available);">—</div>
+                            <div class="kpi-value" id="kpi-available" style="color:var(--st-available);">â€”</div>
                             <span class="kpi-subtext" id="kpi-available-sub">Open for parking</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Occupied Bays</span>
-                            <div class="kpi-value" id="kpi-occupied" style="color:var(--st-occupied);">—</div>
+                            <div class="kpi-value" id="kpi-occupied" style="color:var(--st-occupied);">â€”</div>
                             <span class="kpi-subtext" id="kpi-occupied-sub">In use</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Waiting Queue</span>
-                            <div class="kpi-value" id="kpi-waiting" style="color:var(--st-waiting);">—</div>
+                            <div class="kpi-value" id="kpi-waiting" style="color:var(--st-waiting);">â€”</div>
                             <span class="kpi-subtext">Vehicles queued for bays</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Today's Traffic</span>
-                            <div class="kpi-value" id="kpi-traffic">—</div>
+                            <div class="kpi-value" id="kpi-traffic">â€”</div>
                             <span class="kpi-subtext" id="kpi-traffic-sub">Entries &amp; Exits</span>
                         </div>
                     </div>
@@ -82,9 +82,9 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3); flex-wrap:wrap; gap:var(--space-2);">
                         <div>
                             <h3 id="bay-grid-heading" style="margin:0;">Facility Bay Status</h3>
-                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Painted bay-lines indicate boundaries. Green: open · Red: in use · Gold: maintenance.</p>
+                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Painted bay-lines indicate boundaries. Green: open Â· Red: in use Â· Gold: maintenance.</p>
                         </div>
-                        <a href="/viewer/slots.html" class="btn btn-secondary btn-sm">Full Bay Directory →</a>
+                        <a href="/viewer/slots.html" class="btn btn-secondary btn-sm">Full Bay Directory â†’</a>
                     </div>
 
                     <div id="dashboard-slots-grid" class="slot-grid">
@@ -99,7 +99,7 @@
                             <h3 id="activity-heading" style="margin:0;">Recent Activity Log</h3>
                             <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Latest 10 parking sessions with privacy-masked vehicle numbers.</p>
                         </div>
-                        <a href="/viewer/history.html" class="btn btn-secondary btn-sm">View Public History →</a>
+                        <a href="/viewer/history.html" class="btn btn-secondary btn-sm">View Public History â†’</a>
                     </div>
 
                     <div class="table-container">
@@ -198,7 +198,7 @@
                         </div>
 
                         <div class="slot-tile-footer">
-                            <span class="text-muted">Zone ${escapeHtml(slot.zone)} · F${escapeHtml(slot.floor)}</span>
+                            <span class="text-muted">Zone ${escapeHtml(slot.zone)} Â· F${escapeHtml(slot.floor)}</span>
                         </div>
                     </div>
                 `;
@@ -221,7 +221,7 @@
                         <td class="font-mono text-muted">#${act.id}</td>
                         <td><span class="plate-tag" style="font-size:0.75rem;">${escapeHtml(act.vehicleNumber)}</span></td>
                         <td><span class="slot-type-badge ${escapeHtml(act.vehicleType || 'CAR')}">${escapeHtml(act.vehicleType || 'CAR')}</span></td>
-                        <td class="font-mono" style="font-weight:700;">${escapeHtml(act.slotNumber || '—')}</td>
+                        <td class="font-mono" style="font-weight:700;">${escapeHtml(act.slotNumber || 'â€”')}</td>
                         <td>
                             <span class="status-chip ${isAct ? 'OCCUPIED' : 'AVAILABLE'}">
                                 <span class="status-dot"></span>
@@ -237,5 +237,7 @@
 
         init();
     </script>
+    <script type="module" src="/js/core/cookie-banner.js"></script>
 </body>
 </html>
+

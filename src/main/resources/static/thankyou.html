@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thank you! Your action has been processed successfully by Smart Parking Allocation System.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="light dark">
+    <title>Thank You â€” Smart Parking Allocation System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <script type="module" src="/js/core/theme.js"></script>
+    <style>
+        .ty-layout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8) var(--space-4);
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Soft ambient glow */
+        .ty-layout::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 30% 30%, rgba(16,185,129,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 70% 70%, rgba(242,183,5,0.10) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ty-card {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 56px 44px 48px;
+            box-shadow:
+                0 0 0 1px rgba(16,185,129,0.08),
+                0 24px 48px -12px rgba(0,0,0,0.10);
+            animation: cardPop 0.6s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        @keyframes cardPop {
+            from { opacity: 0; transform: scale(0.92) translateY(24px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Success ring icon */
+        .ty-icon-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(16,185,129,0.12);
+            border: 2px solid rgba(16,185,129,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: ringPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes ringPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.25); }
+            50%       { box-shadow: 0 0 0 14px rgba(16,185,129,0); }
+        }
+
+        .ty-icon-wrap svg {
+            color: #10B981;
+            animation: checkDraw 0.5s 0.3s ease both;
+        }
+
+        @keyframes checkDraw {
+            from { opacity: 0; transform: scale(0.6); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .ty-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #10B981;
+            margin-bottom: 14px;
+        }
+
+        .ty-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            margin: 0 0 10px;
+        }
+
+        .ty-sub {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0 0 32px;
+        }
+
+        .ty-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-primary-ty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 46px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #F2B705 0%, #C98B00 100%);
+            color: #17191C;
+            font-family: var(--font-display);
+            font-size: var(--text-sm);
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 16px -4px rgba(242,183,5,0.45);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn-primary-ty:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px -4px rgba(242,183,5,0.55);
+        }
+
+        .btn-ghost-ty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            text-decoration: none;
+            transition: border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .btn-ghost-ty:hover {
+            border-color: var(--accent);
+            background: rgba(242,183,5,0.06);
+        }
+
+        .ty-footer-note {
+            margin-top: 24px;
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body class="ty-layout">
+
+    <div class="ty-card">
+        <!-- Icon -->
+        <div class="ty-icon-wrap">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+
+        <!-- Tag -->
+        <div class="ty-tag">Success</div>
+
+        <!-- Heading -->
+        <h1 class="ty-title">Thank You!</h1>
+        <p class="ty-sub">Your request has been processed successfully. The Smart Parking system has recorded your action and everything is in order.</p>
+
+        <!-- Actions -->
+        <div class="ty-actions">
+            <a href="/viewer/index.html" class="btn-primary-ty">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Go to Parking Board
+            </a>
+            <a href="/login.html" class="btn-ghost-ty">Back to Sign In</a>
+        </div>
+
+        <p class="ty-footer-note">Smart Parking Allocation System &copy; 2026 &middot; <a href="/terms.html" style="color: var(--accent);">Terms of Use</a></p>
+    </div>
+
+    <script type="module" src="/js/core/cookie-banner.js"></script>
+</body>
+</html>
+

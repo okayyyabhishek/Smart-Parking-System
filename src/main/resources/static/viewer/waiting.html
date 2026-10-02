@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Public waiting queue board. Monitor queue depth and position estimates with zero PII exposure.">
     <meta name="color-scheme" content="light dark">
-    <title>Waiting Queue — Smart Parking Allocation System</title>
+    <title>Waiting Queue â€” Smart Parking Allocation System</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <link rel="stylesheet" href="/css/tokens.css">
@@ -31,7 +31,7 @@
                     <div>
                         <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
                             <h1>Public Waiting Queue</h1>
-                            <span class="dsa-badge">Waiting Queue · PriorityQueue · O(log n)</span>
+                            <span class="dsa-badge">Waiting Queue Â· PriorityQueue Â· O(log n)</span>
                         </div>
                         <p class="text-muted" style="margin:0;">
                             Live anonymous queue position tracker. Vehicles are prioritized by category and admission time.
@@ -103,7 +103,7 @@
             if (queueData.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div style="font-size:2.5rem; margin-bottom:var(--space-2);">✅</div>
+                        <div style="font-size:2.5rem; margin-bottom:var(--space-2);">âœ…</div>
                         <h3 class="empty-state-title">Waiting Queue is Empty</h3>
                         <p class="empty-state-text">There are currently no waiting vehicles. All vehicles are allocated to bays or parking is operating within capacity.</p>
                     </div>
@@ -114,7 +114,7 @@
             const table = new DataTable({
                 container,
                 caption: `Public Waiting Queue (${queueData.length} vehicles queued)`,
-                dsaAnnotation: 'Waiting Queue · PriorityQueue · O(log n)',
+                dsaAnnotation: 'Waiting Queue Â· PriorityQueue Â· O(log n)',
                 emptyMessage: 'No vehicles waiting.',
                 columns: [
                     {
@@ -152,7 +152,7 @@
                         label: 'Wait Time (Live)',
                         render: (_, row) => {
                             const waitSeconds = Math.max(0, Math.floor((Date.now() - new Date(row.waitingSince).getTime()) / 1000));
-                            return `<span class="dsa-badge" style="color:var(--st-waiting); font-weight:700;">⏱️ ${formatDuration(waitSeconds)}</span>`;
+                            return `<span class="dsa-badge" style="color:var(--st-waiting); font-weight:700;">â±ï¸ ${formatDuration(waitSeconds)}</span>`;
                         }
                     }
                 ]
@@ -163,5 +163,7 @@
 
         init();
     </script>
+    <script type="module" src="/js/core/cookie-banner.js"></script>
 </body>
 </html>
+

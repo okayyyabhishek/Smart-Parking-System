@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Terms of Use for Smart Parking Allocation System. Read our usage policies, access control rules, and user responsibilities.">
+    <meta name="color-scheme" content="light dark">
+    <title>Terms of Use â€” Smart Parking Allocation System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <script type="module" src="/js/core/theme.js"></script>
+    <style>
+        .terms-layout {
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terms-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .terms-header-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 14px var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-badge-sm {
+            width: 34px; height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #F2B705 0%, #C98B00 100%);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-name-sm {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .terms-content {
+            flex: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 48px var(--space-6) 80px;
+        }
+
+        .terms-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .terms-title {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+
+        .terms-updated {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .terms-section {
+            margin-bottom: 36px;
+        }
+
+        .terms-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(242,183,5,0.25);
+        }
+
+        .terms-section p, .terms-section li {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            line-height: 1.75;
+            margin-bottom: 8px;
+        }
+
+        .terms-section ul {
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .terms-section ul li::before {
+            content: 'â†’ ';
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .terms-footer {
+            text-align: center;
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding: var(--space-4);
+            background: var(--surface);
+        }
+
+        .terms-footer a { color: var(--accent); }
+
+        @media (max-width: 600px) {
+            .terms-title { font-size: 1.7rem; }
+            .terms-content { padding: 32px var(--space-4) 60px; }
+        }
+    </style>
+</head>
+<body class="terms-layout">
+
+    <header class="terms-header">
+        <div class="terms-header-inner">
+            <a href="/login.html" class="logo-link" title="Smart Parking Allocation System">
+                <div class="logo-badge-sm">
+                    <svg width="18" height="18" viewBox="0 0 64 64" fill="none">
+                        <path d="M18 52V12H36C44.84 12 51 17.5 51 26.5C51 35.5 44.84 41 36 41H27V52H18ZM27 33H35.2C39.8 33 42.5 30.7 42.5 26.5C42.5 22.3 39.8 20 35.2 20H27V33Z" fill="#17191C"/>
+                    </svg>
+                </div>
+                <span class="logo-name-sm">Smart Parking</span>
+            </a>
+            <a href="/login.html" class="btn" style="font-size:0.8rem;padding:6px 14px;">â† Back to Login</a>
+        </div>
+    </header>
+
+    <main class="terms-content">
+        <p class="terms-eyebrow">Legal</p>
+        <h1 class="terms-title">Terms of Use</h1>
+        <p class="terms-updated">Last updated: October 2026 Â· Smart Parking Allocation System</p>
+
+        <div class="terms-section">
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing or using the Smart Parking Allocation System ("System"), you agree to be bound by these Terms of Use. If you do not agree, you must not access or use the System.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>2. Role-Based Access</h2>
+            <p>The System enforces three levels of access control:</p>
+            <ul>
+                <li><strong>Super Admin</strong> â€” Full system authority including bay management, user provisioning, pricing rules, and audit access.</li>
+                <li><strong>Gate Operator</strong> â€” Vehicle admission, bay release, and session management within assigned gates.</li>
+                <li><strong>Public Viewer</strong> â€” Read-only access to live bay availability, queue status, and anonymised session history.</li>
+            </ul>
+            <p>You may only use the features permitted by your assigned role. Any attempt to escalate privileges or bypass role restrictions is prohibited.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>3. Authorised Use</h2>
+            <p>You agree to use the System only for its intended purposes and in compliance with all applicable laws. You must not:</p>
+            <ul>
+                <li>Attempt to access accounts, data, or features not assigned to your role.</li>
+                <li>Introduce malware, harmful scripts, or automated bots.</li>
+                <li>Reverse-engineer, decompile, or extract proprietary algorithms.</li>
+                <li>Use the System to store or process unlawful content.</li>
+            </ul>
+        </div>
+
+        <div class="terms-section">
+            <h2>4. Data and Privacy</h2>
+            <p>The Public Viewer Terminal operates under a strict Zero-PII policy. Vehicle identifiers displayed on the public board are masked and anonymised. Operator and Admin portals handle sensitive data in accordance with applicable data protection regulations. Refer to our Privacy Policy for full details.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>5. Session and Security</h2>
+            <p>Your session token is stored in memory only and expires on inactivity. You are responsible for safeguarding your credentials. Account lockout is enforced after repeated failed authentication attempts.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>6. Audit Logging</h2>
+            <p>All privileged actions performed through Operator and Admin portals are recorded in an immutable audit log. This log is retained and may be reviewed for security and compliance purposes.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>7. Disclaimer of Warranties</h2>
+            <p>The System is provided "as is" for demonstration and operational use. No warranties, express or implied, are made regarding uptime, accuracy of bay telemetry, or fitness for any particular purpose.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>8. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by law, the administrators of the Smart Parking Allocation System shall not be liable for any indirect, incidental, or consequential damages arising from your use of the System.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>9. Changes to Terms</h2>
+            <p>These Terms may be updated at any time. Continued use of the System after changes constitutes acceptance of the revised Terms.</p>
+        </div>
+
+        <div class="terms-section">
+            <h2>10. Contact</h2>
+            <p>For any questions regarding these Terms, please contact the System Administrator through the Admin Control Panel.</p>
+        </div>
+    </main>
+
+    <footer class="terms-footer">
+        Smart Parking Allocation System &copy; 2026 Â· <a href="/login.html">Sign In</a> Â· <a href="/viewer/index.html">Public Board</a>
+    </footer>
+
+    <script type="module" src="/js/core/cookie-banner.js"></script>
+</body>
+</html>
+

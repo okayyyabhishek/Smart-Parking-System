@@ -88,6 +88,10 @@ public class SecurityConfig {
                                 "/login.html",
                                 "/403.html",
                                 "/404.html",
+                                "/thankyou.html",
+                                "/terms.html",
+                                "/robots.txt",
+                                "/sitemap.xml",
                                 "/favicon.svg",
                                 "/favicon.ico",
                                 "/error",
@@ -95,10 +99,12 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/fonts/**",
+                                "/images/**",
                                 "/api/auth/login",
                                 "/api/auth/csrf",
                                 "/h2-console/**"
                         ).permitAll()
+
 
                         // Role-separated APIs
                         .requestMatchers("/api/auth/**").authenticated()
