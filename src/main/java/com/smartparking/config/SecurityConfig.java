@@ -65,6 +65,7 @@ public class SecurityConfig {
                         // Public endpoints and static assets
                         .requestMatchers(
                                 "/",
+                                "/index.html",
                                 "/login.html",
                                 "/css/**",
                                 "/js/**",

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking Allocation System</title>
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <script type="module" src="/js/core/theme.js"></script>
+    <style>
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: var(--space-4);
+        }
+        .loading-badge {
+            font-family: var(--font-display);
+            font-size: var(--text-xs);
+            font-weight: 800;
+            background: var(--accent);
+            color: var(--on-accent);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            letter-spacing: 0.12em;
+            margin-bottom: var(--space-3);
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loading-badge">SMART PARKING GATEWAY</div>
+        <h1>Loading Workspace...</h1>
+        <p class="text-muted">Resolving user session and portal permissions.</p>
+    </div>
+
+    <script type="module">
+        import { api } from '/js/core/api.js';
+        import { getPortalHome } from '/js/core/auth.js';
+
+        async function init() {
+            try {
+                const user = await api.get('/api/auth/me');
+                if (user && user.role) {
+                    window.location.replace(getPortalHome(user.role));
+                    return;
+                }
+            } catch (e) {
+                // Not authenticated
+            }
+            window.location.replace('/login.html');
+        }
+
+        init();
+    </script>
+</body>
+</html>

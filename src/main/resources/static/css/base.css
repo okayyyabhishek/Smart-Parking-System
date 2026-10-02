@@ -1,0 +1,180 @@
+/* ==========================================================================
+   SMART PARKING ALLOCATION SYSTEM — BASE STYLES & RESET
+   Typography: Overpass (headings), Source Sans 3 (body), Overpass Mono (code/mono)
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light dark;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 400;
+    line-height: var(--leading-normal);
+    color: var(--text);
+    background-color: var(--bg);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular numbers for all stats, tables, and numeric displays */
+body, table, input, button, select, textarea {
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility: Skip to Main Content Link
+   -------------------------------------------------------------------------- */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--space-4);
+    z-index: 9999;
+    padding: var(--space-2) var(--space-4);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: var(--space-4);
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Universal Focus Ring
+   -------------------------------------------------------------------------- */
+:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Headings & Display Typography (Overpass)
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: var(--leading-tight);
+    color: var(--text);
+    letter-spacing: -0.015em;
+}
+
+h1 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-3);
+}
+
+h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-2);
+}
+
+h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+}
+
+h4 {
+    font-size: var(--text-md);
+    margin-bottom: var(--space-1);
+}
+
+p {
+    margin-bottom: var(--space-3);
+    color: var(--text);
+}
+
+p.lead {
+    font-size: var(--text-md);
+    color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Monospace & Stamped Text (Overpass Mono)
+   -------------------------------------------------------------------------- */
+code, kbd, samp, pre, .font-mono {
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+}
+
+/* --------------------------------------------------------------------------
+   Links
+   -------------------------------------------------------------------------- */
+a {
+    color: var(--focus-ring);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--text);
+}
+
+/* --------------------------------------------------------------------------
+   Form Base Reset
+   -------------------------------------------------------------------------- */
+input, button, select, textarea {
+    font-family: inherit;
+    font-size: var(--text-base);
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Layout Containers & Wrappers
+   -------------------------------------------------------------------------- */
+.container {
+    width: 100%;
+    max-width: var(--layout-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

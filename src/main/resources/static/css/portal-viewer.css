@@ -1,0 +1,29 @@
+/* ==========================================================================
+   SMART PARKING ALLOCATION SYSTEM — VIEWER PORTAL STYLES
+   Portal Stripe: --text-muted (Grey) | Badge: READ ONLY
+   ========================================================================== */
+
+/* Viewer Identity */
+.portal-stripe {
+    background-color: var(--stripe-viewer);
+}
+
+.viewer-header-badge {
+    background-color: var(--surface-2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+/* Read-Only Notice Banner */
+.readonly-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}

@@ -1,0 +1,44 @@
+/* ==========================================================================
+   SMART PARKING ALLOCATION SYSTEM — OPERATOR PORTAL STYLES
+   Portal Stripe: --st-available (Green) | Badge: GATE DESK
+   ========================================================================== */
+
+/* Operator Identity */
+.portal-stripe {
+    background-color: var(--stripe-operator);
+}
+
+.operator-header-badge {
+    background-color: var(--st-available-bg);
+    color: var(--st-available);
+    border: 1px solid var(--st-available);
+}
+
+/* Fast Entry / Exit Bar */
+.quick-action-bar {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+}
+
+/* Recent Exits Strip (TRD §5) */
+.recent-exits-strip {
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    padding: var(--space-3) 0;
+    margin-bottom: var(--space-6);
+}
+
+.exit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+}

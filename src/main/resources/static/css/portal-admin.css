@@ -1,0 +1,49 @@
+/* ==========================================================================
+   SMART PARKING ALLOCATION SYSTEM — SUPER ADMIN PORTAL STYLES
+   Portal Stripe: --accent (Yellow) | Badge: MAIN CONTROL
+   ========================================================================== */
+
+/* Super Admin Identity */
+.portal-stripe {
+    background-color: var(--stripe-admin);
+}
+
+.admin-header-badge {
+    background-color: rgba(242, 183, 5, 0.2);
+    color: var(--text);
+    border: 1px solid var(--accent);
+}
+
+/* User Management Action Strip */
+.user-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+}
+
+.user-status-pill.active {
+    background-color: var(--st-available-bg);
+    color: var(--st-available);
+    border: 1px solid var(--st-available);
+}
+
+.user-status-pill.disabled {
+    background-color: var(--st-occupied-bg);
+    color: var(--st-occupied);
+    border: 1px solid var(--st-occupied);
+}
+
+/* Audit Log Table */
+.audit-action-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    padding: 2px 6px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
