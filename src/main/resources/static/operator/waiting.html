@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-operator.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,13 +28,13 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>Waiting Priority Queue</h1>
                             <span class="dsa-badge">Waiting Queue · PriorityQueue · O(log n)</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">
+                        <p class="text-muted p-muted-reset">
                             Ordered by Priority (EMERGENCY &gt; HIGH &gt; NORMAL) and arrival timestamp FIFO. Automatically reallocated upon vehicle exit.
                         </p>
                     </div>
@@ -45,19 +46,19 @@
                 </div>
 
                 <!-- Explanation Banner for Viva -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-left:4px solid var(--st-waiting); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
-                        <strong style="font-size:var(--text-sm);">Smart Reallocation Invariant:</strong>
+                <div class="callout-waiting">
+                    <div class="section-row section-row-mb2">
+                        <strong class="text-sm-regular">Smart Reallocation Invariant:</strong>
                         <span class="dsa-badge">Custom Priority Comparator</span>
                     </div>
-                    <p style="font-size:var(--text-xs); color:var(--text-muted); margin:0; line-height:1.5;">
+                    <p class="p-callout-text">
                         When an occupied slot is released, the engine inspects the queue and extracts the highest-priority <em>compatible</em> waiting vehicle (incompatible vehicles are buffered and re-inserted, preserving priority ordering).
                     </p>
                 </div>
 
                 <!-- Queue Container -->
                 <div id="queue-container">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading waiting vehicles...</div>
+                    <div class="text-muted loading-pad">Loading waiting vehicles...</div>
                 </div>
             </main>
         </div>
@@ -105,7 +106,7 @@
             if (queueData.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div style="font-size:2.5rem; margin-bottom:var(--space-2);">✅</div>
+                        <div class="icon-large-state">✅</div>
                         <h3 class="empty-state-title">Waiting Queue is Empty</h3>
                         <p class="empty-state-text">There are currently no waiting vehicles. All vehicles are allocated to bays or parking is operating within capacity.</p>
                         <a href="/operator/entry.html" class="btn btn-primary btn-sm">Park a Vehicle</a>
@@ -124,7 +125,7 @@
                         key: 'queuePosition',
                         label: 'Pos',
                         sortable: true,
-                        render: (val) => `<span style="font-family:var(--font-mono); font-weight:800; font-size:var(--text-md); color:var(--st-waiting);">#${val}</span>`
+                        render: (val) => `<span class="queue-num-badge">#${val}</span>`
                     },
                     {
                         key: 'vehicleNumber',
@@ -147,7 +148,7 @@
                             let bg = 'var(--surface-2)';
                             if (val === 'EMERGENCY') { color = 'var(--st-occupied)'; bg = 'var(--st-occupied-bg)'; }
                             if (val === 'HIGH') { color = 'var(--st-waiting)'; bg = 'var(--st-waiting-bg)'; }
-                            return `<span style="font-size:var(--text-xs); font-weight:800; color:${color}; background:${bg}; padding:2px 8px; border-radius:var(--radius-sm); border:1px solid currentColor;">${escapeHtml(val)}</span>`;
+                            return `<span class="queue-status-pill ${val === 'EMERGENCY' ? 'priority-emergency' : val === 'HIGH' ? 'priority-high' : 'priority-normal'}">${escapeHtml(val)}</span>`;
                         }
                     },
                     {
@@ -155,21 +156,21 @@
                         label: 'Contact',
                         render: (val) => {
                             if (!val || val === '—') return '—';
-                            return `<span class="phone-link font-mono text-muted" style="cursor:default;" title="Protected Driver Contact">📞 ${escapeHtml(val)}</span>`;
+                            return `<span class="phone-link font-mono text-muted cursor-default" title="Protected Driver Contact">📞 ${escapeHtml(val)}</span>`;
                         }
                     },
                     {
                         key: 'waitingSince',
                         label: 'Enqueued At',
                         sortable: true,
-                        render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                        render: (val) => `<span class="text-xs-regular">${formatDateTime(val)}</span>`
                     },
                     {
                         key: 'waitingSeconds',
                         label: 'Wait Time (Live)',
                         render: (_, row) => {
                             const waitSeconds = Math.max(0, Math.floor((Date.now() - new Date(row.waitingSince).getTime()) / 1000));
-                            return `<span class="dsa-badge" style="color:var(--st-waiting); font-weight:700;">⏱️ ${formatDuration(waitSeconds)}</span>`;
+                            return `<span class="dsa-badge text-st-waiting-bold">⏱️ ${formatDuration(waitSeconds)}</span>`;
                         }
                     }
                 ]

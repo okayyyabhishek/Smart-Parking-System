@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-admin.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,18 +28,18 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title & Header Actions -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>System Audit Trail</h1>
                             <span class="dsa-badge">Immutable Audit Log · Append-Only Ledger · O(1) Writes</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">
+                        <p class="text-muted p-muted-reset">
                             Tamper-evident operational and administrative audit records. Captures authentication, gate actions, bay updates, and user governance.
                         </p>
                     </div>
 
-                    <div style="display:flex; gap:var(--space-3); align-items:center;">
+                    <div class="action-row">
                         <button type="button" id="export-csv-btn" class="btn btn-secondary btn-sm">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             <span>Export CSV</span>
@@ -51,9 +52,9 @@
                 </div>
 
                 <!-- Search & Filter Toolbar -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-direction:column; gap:var(--space-3);">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; justify-content:space-between;">
-                        <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                <div class="toolbar-surface">
+                    <div class="toolbar-row">
+                        <div class="toolbar-filters">
                             <input type="text" id="audit-search-input" class="form-input toolbar-search" placeholder="Search actor, IP, target details...">
 
                             <select id="action-filter" class="form-select" aria-label="Filter by Audit Action">
@@ -84,8 +85,8 @@
                     </div>
 
                     <!-- Quick Date Range Filters -->
-                    <div style="display:flex; gap:var(--space-2); align-items:center; flex-wrap:wrap; padding-top:var(--space-2); border-top:1px dashed var(--border);">
-                        <span style="font-size:var(--text-xs); color:var(--text-muted); font-weight:700;">Date Range:</span>
+                    <div class="date-chips-row">
+                        <span class="date-chips-label">Date Range:</span>
                         <button type="button" class="btn btn-secondary btn-sm date-filter-chip active" data-range="all">All Time</button>
                         <button type="button" class="btn btn-secondary btn-sm date-filter-chip" data-range="today">Today</button>
                         <button type="button" class="btn btn-secondary btn-sm date-filter-chip" data-range="7days">Last 7 Days</button>
@@ -94,7 +95,7 @@
 
                 <!-- Audit Table Container -->
                 <div id="audit-table-container">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading audit ledger...</div>
+                    <div class="text-muted loading-pad">Loading audit ledger...</div>
                 </div>
             </main>
         </div>
@@ -187,13 +188,13 @@
                             key: 'timestamp',
                             label: 'Timestamp (IST)',
                             sortable: true,
-                            render: (val) => `<span style="font-size:var(--text-xs); white-space:nowrap;">${formatDateTime(val)}</span>`
+                            render: (val) => `<span class="cell-nowrap-xs">${formatDateTime(val)}</span>`
                         },
                         {
                             key: 'username',
                             label: 'Actor',
                             sortable: true,
-                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || 'anonymous')}</span>`
+                            render: (val) => `<span class="font-mono font-bold">${escapeHtml(val || 'anonymous')}</span>`
                         },
                         {
                             key: 'role',
@@ -202,7 +203,7 @@
                             render: (val) => {
                                 if (!val) return '<span class="text-muted">—</span>';
                                 const cls = val === 'SUPER_ADMIN' ? 'admin' : val.toLowerCase();
-                                return `<span class="role-badge ${cls}" style="font-size:0.65rem;">${escapeHtml(val)}</span>`;
+                                return `<span class="role-badge ${cls} text-2xs">${escapeHtml(val)}</span>`;
                             }
                         },
                         {
@@ -214,12 +215,12 @@
                         {
                             key: 'target',
                             label: 'Audit Target & Details',
-                            render: (val) => `<span style="font-size:var(--text-xs); word-break:break-word;">${escapeHtml(val || '—')}</span>`
+                            render: (val) => `<span class="cell-break-xs">${escapeHtml(val || '—')}</span>`
                         },
                         {
                             key: 'ip',
                             label: 'IP Origin',
-                            render: (val) => `<span class="font-mono text-muted" style="font-size:0.75rem;">${escapeHtml(val || '—')}</span>`
+                            render: (val) => `<span class="font-mono text-muted text-xs-sm">${escapeHtml(val || '—')}</span>`
                         }
                     ]
                 });

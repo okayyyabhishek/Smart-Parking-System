@@ -1,23 +1,23 @@
 package com.smartparking.qa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartparking.ds.ExitRecord;
-import com.smartparking.ds.ParkingHistoryStack;
+
+
 import com.smartparking.ds.SlotSearchManager;
 import com.smartparking.ds.SlotSnapshot;
 import com.smartparking.ds.VehicleLookupManager;
 import com.smartparking.ds.VehicleSnapshot;
 import com.smartparking.ds.WaitingEntry;
-import com.smartparking.ds.WaitingVehiclePriorityQueue;
+
 import com.smartparking.dto.common.VehicleEntryRequest;
 import com.smartparking.exception.AlreadyParkedException;
-import com.smartparking.exception.AlreadyWaitingException;
+
 import com.smartparking.model.AuditLog;
 import com.smartparking.model.ParkingSession;
 import com.smartparking.model.ParkingSlot;
 import com.smartparking.model.Priority;
 import com.smartparking.model.Role;
-import com.smartparking.model.SessionStatus;
+
 import com.smartparking.model.SlotStatus;
 import com.smartparking.model.SlotType;
 import com.smartparking.model.Vehicle;
@@ -25,7 +25,6 @@ import com.smartparking.model.VehicleType;
 import com.smartparking.repository.AuditLogRepository;
 import com.smartparking.repository.ParkingSessionRepository;
 import com.smartparking.repository.ParkingSlotRepository;
-import com.smartparking.repository.VehicleRepository;
 import com.smartparking.security.LoginAttemptService;
 import com.smartparking.service.ParkingService;
 import com.smartparking.service.SlotService;
@@ -104,8 +103,6 @@ class Phase8HardeningAndQaVerificationTest {
     @Autowired
     private ParkingSessionRepository sessionRepository;
 
-    @Autowired
-    private VehicleRepository vehicleRepository;
 
     @Autowired
     private AuditLogRepository auditLogRepository;

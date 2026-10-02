@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-admin.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,13 +28,13 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title & Header Actions -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>User &amp; Access Governance</h1>
                             <span class="dsa-badge">Role-Based Access Control · BCrypt &amp; Session Guard</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">Create operator and viewer accounts, manage credentials, and toggle login authorization.</p>
+                        <p class="text-muted p-muted-reset">Create operator and viewer accounts, manage credentials, and toggle login authorization.</p>
                     </div>
 
                     <button type="button" id="open-create-user-btn" class="btn btn-primary">
@@ -43,19 +44,19 @@
                 </div>
 
                 <!-- Governance Note -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-1);">
-                        <strong style="font-size:var(--text-sm);">Security Policy &amp; Account Protection:</strong>
+                <div class="callout-accent">
+                    <div class="section-row section-row-mb1">
+                        <strong class="text-sm-regular">Security Policy &amp; Account Protection:</strong>
                         <span class="dsa-badge">Last Admin Invariant</span>
                     </div>
-                    <p style="font-size:var(--text-xs); color:var(--text-muted); margin:0; line-height:1.5;">
+                    <p class="p-callout-text">
                         Accounts can be temporarily suspended without deleting audit history. The system strictly forbids disabling the last remaining active <code>SUPER_ADMIN</code> to prevent administrative lockout.
                     </p>
                 </div>
 
                 <!-- Filter & Search Toolbar -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                <div class="toolbar-surface-row">
+                    <div class="toolbar-filters">
                         <input type="text" id="user-search-input" class="form-input toolbar-search" placeholder="Search by username...">
                         
                         <select id="user-role-filter" class="form-select" aria-label="Filter by Role">
@@ -79,14 +80,14 @@
 
                 <!-- Users Table Container -->
                 <div id="users-table-container">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading users directory...</div>
+                    <div class="text-muted loading-pad">Loading users directory...</div>
                 </div>
             </main>
         </div>
     </div>
 
     <!-- Create User Modal Dialog -->
-    <div id="create-user-modal-backdrop" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="create-user-title">
+    <div id="create-user-modal-backdrop" class="modal-backdrop hidden-view" role="dialog" aria-modal="true" aria-labelledby="create-user-title">
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="modal-title" id="create-user-title">Provision New System User</h3>
@@ -96,7 +97,7 @@
             </div>
             <form id="create-user-form" novalidate>
                 <div class="modal-body">
-                    <p class="text-muted" style="margin-bottom:var(--space-4); font-size:var(--text-sm);">
+                    <p class="text-muted desc-mb4">
                         Assign appropriate role permissions. Credentials will be securely hashed with BCrypt.
                     </p>
 
@@ -128,14 +129,14 @@
                         <input type="password" id="new-password" class="form-input font-mono" required minlength="10">
                     </div>
 
-                    <div class="form-group" style="margin-bottom:var(--space-2);">
-                        <label style="display:flex; align-items:center; gap:var(--space-2); cursor:pointer; font-size:var(--text-sm);">
-                            <input type="checkbox" id="new-must-change-pass" checked style="width:16px; height:16px;">
+                    <div class="form-group form-group-sm">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="new-must-change-pass" checked class="checkbox-sm">
                             <span>Force password change on first sign-in</span>
                         </label>
                     </div>
 
-                    <div id="create-user-error-msg" class="form-error" style="display:none;"></div>
+                    <div id="create-user-error-msg" class="form-error hidden-view"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -149,7 +150,7 @@
     </div>
 
     <!-- Reset Password Modal Dialog -->
-    <div id="reset-pass-modal-backdrop" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="reset-pass-title">
+    <div id="reset-pass-modal-backdrop" class="modal-backdrop hidden-view" role="dialog" aria-modal="true" aria-labelledby="reset-pass-title">
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="modal-title" id="reset-pass-title">Reset User Password</h3>
@@ -159,7 +160,7 @@
             </div>
             <form id="reset-pass-form" novalidate>
                 <div class="modal-body">
-                    <p class="text-muted" style="margin-bottom:var(--space-4); font-size:var(--text-sm);">
+                    <p class="text-muted desc-mb4">
                         Set a new temporary password for user <strong id="reset-pass-target-user" class="font-mono"></strong>.
                     </p>
 
@@ -171,7 +172,7 @@
                         <input type="password" id="reset-pass-value" class="form-input font-mono" required minlength="10">
                     </div>
 
-                    <div id="reset-pass-error-msg" class="form-error" style="display:none;"></div>
+                    <div id="reset-pass-error-msg" class="form-error hidden-view"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -250,7 +251,7 @@
                             key: 'username',
                             label: 'Username',
                             sortable: true,
-                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val)}</span>`
+                            render: (val) => `<span class="font-mono font-bold">${escapeHtml(val)}</span>`
                         },
                         {
                             key: 'role',
@@ -273,26 +274,26 @@
                             key: 'mustChangePassword',
                             label: 'Password Flag',
                             render: (val) => val 
-                                ? `<span class="dsa-badge" style="color:var(--st-waiting); font-size:0.65rem;">Reset Required</span>`
-                                : `<span class="text-muted" style="font-size:0.75rem;">Normal</span>`
+                                ? `<span class="dsa-badge badge-reset-req">Reset Required</span>`
+                                : `<span class="text-muted text-xs-sm">Normal</span>`
                         },
                         {
                             key: 'createdAt',
                             label: 'Created Date',
                             sortable: true,
-                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                            render: (val) => `<span class="text-xs-regular">${formatDateTime(val)}</span>`
                         },
                         {
                             key: 'actions',
                             label: 'Account Control',
                             render: (_, row) => {
                                 const toggleBtn = row.enabled
-                                    ? `<button type="button" class="btn btn-secondary btn-sm" style="color:var(--st-occupied);" onclick="toggleUserEnabled('${escapeHtml(row.username)}', false)">Disable</button>`
-                                    : `<button type="button" class="btn btn-secondary btn-sm" style="color:var(--st-available);" onclick="toggleUserEnabled('${escapeHtml(row.username)}', true)">Enable</button>`;
+                                    ? `<button type="button" class="btn btn-secondary btn-sm text-st-occupied" onclick="toggleUserEnabled('${escapeHtml(row.username)}', false)">Disable</button>`
+                                    : `<button type="button" class="btn btn-secondary btn-sm text-st-available" onclick="toggleUserEnabled('${escapeHtml(row.username)}', true)">Enable</button>`;
                                 
                                 const resetBtn = `<button type="button" class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${escapeHtml(row.username)}')">Reset Password</button>`;
 
-                                return `<div style="display:flex; gap:6px;">${toggleBtn}${resetBtn}</div>`;
+                                return `<div class="action-gap6">${toggleBtn}${resetBtn}</div>`;
                             }
                         }
                     ]

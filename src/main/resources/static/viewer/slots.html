@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-viewer.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,29 +28,29 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>Facility Bay Availability</h1>
                             <span class="dsa-badge">Slot Search Â· Linear Search Â· O(n)</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">Public status map showing available, occupied, and maintenance bays.</p>
+                        <p class="text-muted p-muted-reset">Public status map showing available, occupied, and maintenance bays.</p>
                     </div>
 
                     <!-- View Mode Toggle -->
-                    <div style="display:flex; gap:var(--space-2); background:var(--surface-2); padding:3px; border-radius:var(--radius-sm); border:1px solid var(--border);">
-                        <button type="button" id="view-grid-btn" class="btn btn-secondary btn-sm" style="background:var(--surface);">
+                    <div class="view-toggle-group">
+                        <button type="button" id="view-grid-btn" class="btn btn-secondary btn-sm btn-view-active">
                             <span>Grid Map</span>
                         </button>
-                        <button type="button" id="view-table-btn" class="btn btn-secondary btn-sm" style="border-color:transparent;">
+                        <button type="button" id="view-table-btn" class="btn btn-secondary btn-sm btn-view-inactive">
                             <span>Data Table</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Filter & Search Toolbar -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1; min-width:0;">
+                <div class="toolbar-surface-row">
+                    <div class="toolbar-filters-min">
                         <input type="text" id="slot-search-input" class="form-input toolbar-search" placeholder="Search bays or zones...">
                         
                         <select id="status-filter" class="form-select" aria-label="Filter by Status">
@@ -68,18 +69,18 @@
                         </select>
                     </div>
 
-                    <div id="slots-count-badge" class="dsa-badge" style="font-size:var(--text-xs);">
+                    <div id="slots-count-badge" class="dsa-badge badge-xs">
                         Showing 0 bays
                     </div>
                 </div>
 
                 <!-- Grid View Container -->
                 <div id="slots-grid-view" class="slot-grid">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading bays...</div>
+                    <div class="text-muted loading-pad">Loading bays...</div>
                 </div>
 
                 <!-- Table View Container (Initially Hidden) -->
-                <div id="slots-table-view" style="display:none;"></div>
+                <div id="slots-table-view" class="hidden-view"></div>
             </main>
         </div>
     </div>
@@ -145,7 +146,7 @@
 
             if (slots.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state empty-full-span">
                         <h3 class="empty-state-title">No Matching Parking Bays</h3>
                         <p class="empty-state-text">Try modifying your search or filter options.</p>
                     </div>

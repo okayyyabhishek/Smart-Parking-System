@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-viewer.css">
 
     <!-- Flash-free theme initialization -->
@@ -29,18 +30,19 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title -->
-                <div style="margin-bottom:var(--space-6);">
-                    <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                <div class="section-mb6">
+                    <div class="page-title-inner">
                         <h1>Public Facility Terminal</h1>
+                        <span class="dsa-badge">Zero PII Leakage · Masked Public Viewport</span>
                     </div>
-                    <p class="text-muted" style="margin:0;">
+                    <p class="text-muted p-muted-reset">
                         Live facility bay availability, waiting queue metrics, and public activity telemetry.
                     </p>
                 </div>
 
                 <!-- Privacy & Redaction Banner -->
                 <div class="readonly-banner">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-no-shrink"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                     <div>
                         <strong>Privacy Safeguard Active:</strong>
                         All personal identifiable information (driver identities, contact numbers, and complete vehicle registration plates) is redacted on public viewports.
@@ -48,24 +50,24 @@
                 </div>
 
                 <!-- KPI Metric Cards -->
-                <section aria-labelledby="kpi-heading" style="margin-bottom:var(--space-6);">
+                <section aria-labelledby="kpi-heading" class="section-mb6">
                     <h2 id="kpi-heading" class="sr-only">Facility Status Metrics</h2>
                     <div class="kpi-grid">
                         <div class="kpi-card highlight">
                             <span class="kpi-label">Available Bays</span>
-                            <div class="kpi-value" id="kpi-available" style="color:var(--st-available);">â€”</div>
+                            <div class="kpi-value" id="kpi-available" class="kpi-available">â€”</div>
                             <span class="kpi-subtext" id="kpi-available-sub">Open for parking</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Occupied Bays</span>
-                            <div class="kpi-value" id="kpi-occupied" style="color:var(--st-occupied);">â€”</div>
+                            <div class="kpi-value" id="kpi-occupied" class="kpi-occupied">â€”</div>
                             <span class="kpi-subtext" id="kpi-occupied-sub">In use</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Waiting Queue</span>
-                            <div class="kpi-value" id="kpi-waiting" style="color:var(--st-waiting);">â€”</div>
+                            <div class="kpi-value" id="kpi-waiting" class="kpi-waiting">â€”</div>
                             <span class="kpi-subtext">Vehicles queued for bays</span>
                         </div>
 
@@ -78,26 +80,26 @@
                 </section>
 
                 <!-- Live Bay Layout -->
-                <section aria-labelledby="bay-grid-heading" style="margin-bottom:var(--space-8);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3); flex-wrap:wrap; gap:var(--space-2);">
+                <section aria-labelledby="bay-grid-heading" class="section-mb8">
+                    <div class="section-row-wrap">
                         <div>
-                            <h3 id="bay-grid-heading" style="margin:0;">Facility Bay Status</h3>
-                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Painted bay-lines indicate boundaries. Green: open Â· Red: in use Â· Gold: maintenance.</p>
+                            <h3 id="bay-grid-heading" class="section-h3">Facility Bay Status</h3>
+                            <p class="text-muted p-muted-xs">Painted bay-lines indicate boundaries. Green: open Â· Red: in use Â· Gold: maintenance.</p>
                         </div>
                         <a href="/viewer/slots.html" class="btn btn-secondary btn-sm">Full Bay Directory â†’</a>
                     </div>
 
                     <div id="dashboard-slots-grid" class="slot-grid">
-                        <div class="text-muted" style="font-size:var(--text-sm); padding:var(--space-4);">Loading parking bays...</div>
+                        <div class="text-muted loading-sm">Loading parking bays...</div>
                     </div>
                 </section>
 
                 <!-- Recent Activity Table -->
                 <section aria-labelledby="activity-heading">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3);">
+                    <div class="section-row section-row-mb3">
                         <div>
-                            <h3 id="activity-heading" style="margin:0;">Recent Activity Log</h3>
-                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Latest 10 parking sessions with privacy-masked vehicle numbers.</p>
+                            <h3 id="activity-heading" class="section-h3">Recent Activity Log</h3>
+                            <p class="text-muted p-muted-xs">Latest 10 parking sessions with privacy-masked vehicle numbers.</p>
                         </div>
                         <a href="/viewer/history.html" class="btn btn-secondary btn-sm">View Public History â†’</a>
                     </div>
@@ -118,7 +120,7 @@
                             </thead>
                             <tbody id="activity-tbody">
                                 <tr>
-                                    <td colspan="7" style="text-align:center; padding:var(--space-6); color:var(--text-muted);">
+                                    <td colspan="7" class="td-center-muted">
                                         Loading recent activity...
                                     </td>
                                 </tr>
@@ -210,7 +212,7 @@
             if (!tbody) return;
 
             if (!activities || activities.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:var(--space-4); color:var(--text-muted);">No recent activity recorded.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="td-empty-muted">No recent activity recorded.</td></tr>`;
                 return;
             }
 
@@ -219,17 +221,17 @@
                 return `
                     <tr>
                         <td class="font-mono text-muted">#${act.id}</td>
-                        <td><span class="plate-tag" style="font-size:0.75rem;">${escapeHtml(act.vehicleNumber)}</span></td>
+                        <td><span class="plate-tag plate-tag-xs">${escapeHtml(act.vehicleNumber)}</span></td>
                         <td><span class="slot-type-badge ${escapeHtml(act.vehicleType || 'CAR')}">${escapeHtml(act.vehicleType || 'CAR')}</span></td>
-                        <td class="font-mono" style="font-weight:700;">${escapeHtml(act.slotNumber || 'â€”')}</td>
+                        <td class="font-mono font-bold">${escapeHtml(act.slotNumber || 'â€”')}</td>
                         <td>
                             <span class="status-chip ${isAct ? 'OCCUPIED' : 'AVAILABLE'}">
                                 <span class="status-dot"></span>
                                 <span>${isAct ? 'PARKED' : 'DEPARTED'}</span>
                             </span>
                         </td>
-                        <td style="font-size:var(--text-xs);">${formatDateTime(act.entryTime)}</td>
-                        <td class="font-mono" style="font-size:var(--text-xs);">${act.durationFormatted || 'Active'}</td>
+                        <td class="text-xs-regular">${formatDateTime(act.entryTime)}</td>
+                        <td class="font-mono text-xs-regular">${act.durationFormatted || 'Active'}</td>
                     </tr>
                 `;
             }).join('');

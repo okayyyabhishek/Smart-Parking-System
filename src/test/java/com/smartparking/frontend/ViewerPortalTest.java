@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparking.model.Priority;
 import com.smartparking.model.Role;
 import com.smartparking.model.VehicleType;
-import com.smartparking.repository.ParkingSessionRepository;
-import com.smartparking.repository.ParkingSlotRepository;
-import com.smartparking.repository.VehicleRepository;
 import com.smartparking.service.ParkingService;
 import com.smartparking.service.VehicleService;
 import com.smartparking.service.WaitingQueueService;
@@ -49,15 +46,6 @@ class ViewerPortalTest {
 
     @Autowired
     private VehicleService vehicleService;
-
-    @Autowired
-    private VehicleRepository vehicleRepository;
-
-    @Autowired
-    private ParkingSlotRepository slotRepository;
-
-    @Autowired
-    private ParkingSessionRepository sessionRepository;
 
     @Test
     @WithMockUser(username = "viewer", roles = {"VIEWER"})

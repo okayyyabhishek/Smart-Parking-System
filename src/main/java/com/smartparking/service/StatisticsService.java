@@ -4,7 +4,7 @@ import com.smartparking.model.ParkingSession;
 import com.smartparking.model.SessionStatus;
 import com.smartparking.model.SlotStatus;
 import com.smartparking.model.SlotType;
-import com.smartparking.model.Vehicle;
+
 import com.smartparking.model.VehicleType;
 import com.smartparking.repository.ParkingSessionRepository;
 import com.smartparking.repository.ParkingSlotRepository;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.smartparking.security;
 
 import com.smartparking.dto.operator.OperatorVehicleDto;
 import com.smartparking.dto.operator.OperatorWaitingDto;
-import com.smartparking.dto.viewer.ViewerDashboardDto;
+
 import com.smartparking.dto.viewer.ViewerSessionDto;
 import com.smartparking.dto.viewer.ViewerSlotDto;
 import com.smartparking.dto.viewer.ViewerWaitingDto;

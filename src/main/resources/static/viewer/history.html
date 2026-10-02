@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-viewer.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,13 +28,13 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>Public Parking History</h1>
                             <span class="dsa-badge">Parking History Â· Bounded Deque &amp; Audit Trail Â· O(1) Push/Pop</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">
+                        <p class="text-muted p-muted-reset">
                             Public audit ledger of parking sessions. All license plates are redacted and driver identities are omitted.
                         </p>
                     </div>
@@ -46,7 +47,7 @@
 
                 <!-- Privacy & Redaction Banner -->
                 <div class="readonly-banner">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-no-shrink"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                     <div>
                         <strong>Masked Plate Standard:</strong>
                         In compliance with data protection policies, vehicle plates are formatted as <code>PB10â€¢â€¢â€¢â€¢34</code> (preserving prefix and suffix while concealing internal digits).
@@ -54,8 +55,8 @@
                 </div>
 
                 <!-- Search & Filter Toolbar -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                <div class="toolbar-surface-row">
+                    <div class="toolbar-filters">
                         <input type="text" id="history-search-input" class="form-input toolbar-search" placeholder="Search bays or vehicle plates...">
                         
                         <select id="history-status-filter" class="form-select" aria-label="Filter by Session Status">
@@ -72,7 +73,7 @@
 
                 <!-- History Table Container -->
                 <div id="history-table-container">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading session records...</div>
+                    <div class="text-muted loading-pad">Loading session records...</div>
                 </div>
             </main>
         </div>
@@ -142,7 +143,7 @@
                             key: 'vehicleNumber',
                             label: 'Vehicle Plate (Masked)',
                             sortable: true,
-                            render: (val) => `<span class="plate-tag" style="font-size:0.8rem;">${escapeHtml(val)}</span>`
+                            render: (val) => `<span class="plate-tag plate-tag-md">${escapeHtml(val)}</span>`
                         },
                         {
                             key: 'vehicleType',
@@ -154,7 +155,7 @@
                             key: 'slotNumber',
                             label: 'Bay #',
                             sortable: true,
-                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || 'â€”')}</span>`
+                            render: (val) => `<span class="font-mono font-bold">${escapeHtml(val || 'â€”')}</span>`
                         },
                         {
                             key: 'status',
@@ -174,13 +175,13 @@
                             key: 'entryTime',
                             label: 'Entry Time',
                             sortable: true,
-                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                            render: (val) => `<span class="text-xs-regular">${formatDateTime(val)}</span>`
                         },
                         {
                             key: 'exitTime',
                             label: 'Exit Time',
                             sortable: true,
-                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                            render: (val) => `<span class="text-xs-regular">${formatDateTime(val)}</span>`
                         },
                         {
                             key: 'durationSeconds',
@@ -189,7 +190,7 @@
                             render: (val, row) => {
                                 if (row.status === 'ACTIVE') {
                                     const dur = Math.max(0, Math.floor((Date.now() - new Date(row.entryTime).getTime()) / 1000));
-                                    return `<span class="dsa-badge" style="color:var(--st-available);">â±ï¸ ${formatDuration(dur)} (Active)</span>`;
+                                    return `<span class="dsa-badge text-st-available">â±ï¸ ${formatDuration(dur)} (Active)</span>`;
                                 }
                                 return `<span class="font-mono">${formatDuration(val)}</span>`;
                             }

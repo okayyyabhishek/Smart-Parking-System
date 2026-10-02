@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-admin.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,27 +28,27 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title & Header Actions -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>Facility Bay Manager</h1>
                             <span class="dsa-badge">Slot Search · Linear Search · O(n)</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">Add new parking bays, toggle maintenance modes, and inspect occupancy.</p>
+                        <p class="text-muted p-muted-reset">Add new parking bays, toggle maintenance modes, and inspect occupancy.</p>
                     </div>
 
-                    <div style="display:flex; gap:var(--space-3); align-items:center; flex-wrap:wrap;">
+                    <div class="action-row-wrap-align">
                         <button type="button" id="open-add-slot-btn" class="btn btn-primary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             <span>Add Parking Bay</span>
                         </button>
 
                         <!-- View Mode Toggle -->
-                        <div style="display:flex; gap:var(--space-2); background:var(--surface-2); padding:3px; border-radius:var(--radius-sm); border:1px solid var(--border);">
-                            <button type="button" id="view-grid-btn" class="btn btn-secondary btn-sm" style="background:var(--surface);">
+                        <div class="view-toggle-group">
+                            <button type="button" id="view-grid-btn" class="btn btn-secondary btn-sm btn-view-active">
                                 <span>Grid Map</span>
                             </button>
-                            <button type="button" id="view-table-btn" class="btn btn-secondary btn-sm" style="border-color:transparent;">
+                            <button type="button" id="view-table-btn" class="btn btn-secondary btn-sm btn-view-inactive">
                                 <span>Data Table</span>
                             </button>
                         </div>
@@ -55,8 +56,8 @@
                 </div>
 
                 <!-- Filter & Search Toolbar -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1; min-width:0;">
+                <div class="toolbar-surface-row">
+                    <div class="toolbar-filters-min">
                         <input type="text" id="slot-search-input" class="form-input toolbar-search" placeholder="Search bays, occupants, zones...">
                         
                         <select id="status-filter" class="form-select" aria-label="Filter by Status">
@@ -75,24 +76,24 @@
                         </select>
                     </div>
 
-                    <div id="slots-count-badge" class="dsa-badge" style="font-size:var(--text-xs);">
+                    <div id="slots-count-badge" class="dsa-badge badge-xs">
                         Showing 0 bays
                     </div>
                 </div>
 
                 <!-- Grid View Container -->
                 <div id="slots-grid-view" class="slot-grid">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading bays...</div>
+                    <div class="text-muted loading-pad">Loading bays...</div>
                 </div>
 
                 <!-- Table View Container (Initially Hidden) -->
-                <div id="slots-table-view" style="display:none;"></div>
+                <div id="slots-table-view" class="hidden-view"></div>
             </main>
         </div>
     </div>
 
     <!-- Add Parking Bay Modal Dialog -->
-    <div id="add-slot-modal-backdrop" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="add-slot-title">
+    <div id="add-slot-modal-backdrop" class="modal-backdrop hidden-view" role="dialog" aria-modal="true" aria-labelledby="add-slot-title">
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="modal-title" id="add-slot-title">Add New Parking Bay</h3>
@@ -102,7 +103,7 @@
             </div>
             <form id="add-slot-form" novalidate>
                 <div class="modal-body">
-                    <p class="text-muted" style="margin-bottom:var(--space-4); font-size:var(--text-sm);">
+                    <p class="text-muted desc-mb4">
                         Register a new parking bay in the facility. Slot numbers must follow standard sector nomenclature (e.g. <code>A-06</code>, <code>B-101</code>).
                     </p>
 
@@ -111,7 +112,7 @@
                             <span>Slot Identifier</span>
                             <span class="helper">Format: Zone-Number (e.g. B-01)</span>
                         </label>
-                        <input type="text" id="new-slot-number" class="form-input font-mono" required pattern="^[A-Z]-\d{2,3}$" style="text-transform:uppercase;">
+                        <input type="text" id="new-slot-number" class="form-input font-mono" required pattern="^[A-Z]-\d{2,3}$" class="input-uppercase">
                     </div>
 
                     <div class="form-group">
@@ -130,7 +131,7 @@
                     <div class="form-row-2col">
                         <div class="form-group">
                             <label for="new-slot-zone" class="form-label">Zone</label>
-                            <input type="text" id="new-slot-zone" class="form-input" required maxlength="5" style="text-transform:uppercase;">
+                            <input type="text" id="new-slot-zone" class="form-input" required maxlength="5" class="input-uppercase">
                         </div>
                         <div class="form-group">
                             <label for="new-slot-floor" class="form-label">Floor</label>
@@ -138,7 +139,7 @@
                         </div>
                     </div>
 
-                    <div id="add-slot-error-msg" class="form-error" style="display:none;"></div>
+                    <div id="add-slot-error-msg" class="form-error hidden-view"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -222,7 +223,7 @@
 
             if (slots.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state empty-full-span">
                         <h3 class="empty-state-title">No Matching Parking Bays</h3>
                         <p class="empty-state-text">Try modifying your search or filter options, or add a new bay.</p>
                     </div>
@@ -243,10 +244,10 @@
 
                         <div class="slot-tile-body">
                             ${isOccupied && slot.currentVehicleNumber ? `
-                                <div style="margin-bottom:var(--space-1);">
+                                <div class="section-mb1">
                                     <span class="plate-tag">${escapeHtml(formatPlate(slot.currentVehicleNumber))}</span>
                                 </div>
-                                <div style="font-size:var(--text-xs); color:var(--text-muted);">${escapeHtml(slot.currentOwnerName || 'Occupant')}</div>
+                                <div class="text-xs-muted">${escapeHtml(slot.currentOwnerName || 'Occupant')}</div>
                             ` : `
                                 <div class="status-chip ${escapeHtml(slot.status)}">
                                     <span class="status-dot"></span>
@@ -257,17 +258,17 @@
 
                         <div class="slot-tile-footer">
                             <span class="text-muted">Zone ${escapeHtml(slot.zone)} · F${escapeHtml(slot.floor)}</span>
-                            <div style="display:flex; gap:4px;">
+                            <div class="action-row-gap4">
                                 ${isOccupied ? `
-                                    <button type="button" class="btn btn-secondary btn-sm" style="font-size:0.7rem; padding:0 6px; min-height:26px;" onclick="window.openExitModal('${escapeHtml(slot.currentVehicleNumber)}', () => window.location.reload())">
+                                    <button type="button" class="btn btn-secondary btn-sm btn-mini" onclick="window.openExitModal('${escapeHtml(slot.currentVehicleNumber)}', () => window.location.reload())">
                                         Exit
                                     </button>
                                 ` : isMaint ? `
-                                    <button type="button" class="btn btn-secondary btn-sm" style="font-size:0.7rem; padding:0 6px; min-height:26px; color:var(--st-available);" onclick="toggleMaintenance('${escapeHtml(slot.slotNumber)}', false)">
+                                    <button type="button" class="btn btn-secondary btn-sm btn-mini-avail" onclick="toggleMaintenance('${escapeHtml(slot.slotNumber)}', false)">
                                         Activate
                                     </button>
                                 ` : `
-                                    <button type="button" class="btn btn-secondary btn-sm" style="font-size:0.7rem; padding:0 6px; min-height:26px; color:var(--st-maint);" onclick="toggleMaintenance('${escapeHtml(slot.slotNumber)}', true)">
+                                    <button type="button" class="btn btn-secondary btn-sm btn-mini-maint" onclick="toggleMaintenance('${escapeHtml(slot.slotNumber)}', true)">
                                         Maint
                                     </button>
                                 `}
@@ -312,7 +313,7 @@
                             key: 'currentVehicleNumber', 
                             label: 'Occupant Plate', 
                             sortable: true,
-                            render: (val) => val ? `<span class="plate-tag" style="font-size:0.75rem;">${escapeHtml(formatPlate(val))}</span>` : '—'
+                            render: (val) => val ? `<span class="plate-tag plate-tag-xs">${escapeHtml(formatPlate(val))}</span>` : '—'
                         },
                         { 
                             key: 'currentOwnerName', 
@@ -328,9 +329,9 @@
                                     return `<button type="button" class="btn btn-secondary btn-sm" onclick="window.openExitModal('${escapeHtml(row.currentVehicleNumber)}', () => window.location.reload())">Exit</button>`;
                                 }
                                 if (row.status === 'MAINTENANCE') {
-                                    return `<button type="button" class="btn btn-secondary btn-sm" style="color:var(--st-available);" onclick="toggleMaintenance('${escapeHtml(row.slotNumber)}', false)">End Maint</button>`;
+                                    return `<button type="button" class="btn btn-secondary btn-sm text-st-available" onclick="toggleMaintenance('${escapeHtml(row.slotNumber)}', false)">End Maint</button>`;
                                 }
-                                return `<button type="button" class="btn btn-secondary btn-sm" style="color:var(--st-maint);" onclick="toggleMaintenance('${escapeHtml(row.slotNumber)}', true)">Set Maint</button>`;
+                                return `<button type="button" class="btn btn-secondary btn-sm text-st-maint" onclick="toggleMaintenance('${escapeHtml(row.slotNumber)}', true)">Set Maint</button>`;
                             }
                         }
                     ]

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <script type="module" src="/js/core/theme.js"></script>
     <style>
         .terms-layout {
@@ -25,6 +26,7 @@
             z-index: 20;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
         }
 
@@ -136,6 +138,9 @@
 
         .terms-footer a { color: var(--accent); }
 
+        /* Back button (replaces inline style) */
+        .btn-back-sm { font-size: 0.8rem; padding: 6px 14px; }
+
         @media (max-width: 600px) {
             .terms-title { font-size: 1.7rem; }
             .terms-content { padding: 32px var(--space-4) 60px; }
@@ -154,7 +159,7 @@
                 </div>
                 <span class="logo-name-sm">Smart Parking</span>
             </a>
-            <a href="/login.html" class="btn" style="font-size:0.8rem;padding:6px 14px;">â† Back to Login</a>
+            <a href="/login.html" class="btn btn-back-sm">â† Back to Login</a>
         </div>
     </header>
 

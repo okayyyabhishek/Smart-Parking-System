@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-operator.css">
 
     <!-- Flash-free theme initialization -->
@@ -27,13 +28,13 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>Parking Session History</h1>
                             <span class="dsa-badge">Parking History · Bounded Deque &amp; Audit Trail · O(1) Push/Pop</span>
                         </div>
-                        <p class="text-muted" style="margin:0;">
+                        <p class="text-muted p-muted-reset">
                             Rolling 7-day operational log of admitted, parked, and exited vehicles with masked contact privacy.
                         </p>
                     </div>
@@ -45,8 +46,8 @@
                 </div>
 
                 <!-- Search & Filter Toolbar -->
-                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
-                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                <div class="toolbar-surface-row">
+                    <div class="toolbar-filters">
                         <input type="text" id="history-search-input" class="form-input toolbar-search" placeholder="Search plates or slots...">
                         
                         <select id="history-status-filter" class="form-select" aria-label="Filter by Session Status">
@@ -63,7 +64,7 @@
 
                 <!-- History Table Container -->
                 <div id="history-table-container">
-                    <div class="text-muted" style="padding:var(--space-4);">Loading session records...</div>
+                    <div class="text-muted loading-pad">Loading session records...</div>
                 </div>
             </main>
         </div>
@@ -133,7 +134,7 @@
                             key: 'vehicleNumber',
                             label: 'Vehicle Plate',
                             sortable: true,
-                            render: (val) => `<span class="plate-tag" style="font-size:0.8rem;">${escapeHtml(formatPlate(val))}</span>`
+                            render: (val) => `<span class="plate-tag plate-tag-md">${escapeHtml(formatPlate(val))}</span>`
                         },
                         {
                             key: 'vehicleType',
@@ -145,7 +146,7 @@
                             key: 'slotNumber',
                             label: 'Bay #',
                             sortable: true,
-                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || '—')}</span>`
+                            render: (val) => `<span class="font-mono font-bold">${escapeHtml(val || '—')}</span>`
                         },
                         {
                             key: 'status',
@@ -165,13 +166,13 @@
                             key: 'entryTime',
                             label: 'Entry Time',
                             sortable: true,
-                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                            render: (val) => `<span class="text-xs-regular">${formatDateTime(val)}</span>`
                         },
                         {
                             key: 'exitTime',
                             label: 'Exit Time',
                             sortable: true,
-                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                            render: (val) => `<span class="text-xs-regular">${formatDateTime(val)}</span>`
                         },
                         {
                             key: 'durationSeconds',
@@ -180,7 +181,7 @@
                             render: (val, row) => {
                                 if (row.status === 'ACTIVE') {
                                     const dur = Math.max(0, Math.floor((Date.now() - new Date(row.entryTime).getTime()) / 1000));
-                                    return `<span class="dsa-badge" style="color:var(--st-available);">⏱️ ${formatDuration(dur)} (Active)</span>`;
+                                    return `<span class="dsa-badge text-st-available">⏱️ ${formatDuration(dur)} (Active)</span>`;
                                 }
                                 return `<span class="font-mono">${formatDuration(val)}</span>`;
                             }
@@ -190,7 +191,7 @@
                             label: 'Contact',
                             render: (val) => {
                                 if (!val || val === '—') return '—';
-                                return `<span class="phone-link font-mono text-muted" style="cursor:default;" title="Protected Driver Contact">📞 ${escapeHtml(val)}</span>`;
+                                return `<span class="phone-link font-mono text-muted cursor-default" title="Protected Driver Contact">📞 ${escapeHtml(val)}</span>`;
                             }
                         },
                         {

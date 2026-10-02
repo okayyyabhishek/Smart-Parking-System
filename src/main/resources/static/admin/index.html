@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
     <link rel="stylesheet" href="/css/portal-admin.css">
 
     <!-- Flash-free theme initialization -->
@@ -29,15 +30,15 @@
 
             <main class="content-body" id="main-content">
                 <!-- Page Title & Header Actions -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                <div class="page-title-row">
                     <div>
-                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <div class="page-title-inner">
                             <h1>Main Control Overview</h1>
                         </div>
-                        <p class="text-muted" style="margin:0;">Real-time facility telemetry, administrative shortcuts, and system-wide activity.</p>
+                        <p class="text-muted p-muted-reset">Real-time facility telemetry, administrative shortcuts, and system-wide activity.</p>
                     </div>
 
-                    <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+                    <div class="action-row-wrap">
                         <a href="/admin/slots.html?openAdd=true" class="btn btn-primary">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             <span>Add Parking Bay</span>
@@ -59,19 +60,19 @@
                     <div class="kpi-grid">
                         <div class="kpi-card highlight">
                             <span class="kpi-label">Available Bays</span>
-                            <div class="kpi-value" id="kpi-available" style="color:var(--st-available);">—</div>
+                            <div class="kpi-value" id="kpi-available" class="kpi-available">—</div>
                             <span class="kpi-subtext" id="kpi-available-sub">Ready for allocation</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Occupied Bays</span>
-                            <div class="kpi-value" id="kpi-occupied" style="color:var(--st-occupied);">—</div>
+                            <div class="kpi-value" id="kpi-occupied" class="kpi-occupied">—</div>
                             <span class="kpi-subtext" id="kpi-occupied-sub">Active parked sessions</span>
                         </div>
 
                         <div class="kpi-card">
                             <span class="kpi-label">Waiting Queue</span>
-                            <div class="kpi-value" id="kpi-waiting" style="color:var(--st-waiting);">—</div>
+                            <div class="kpi-value" id="kpi-waiting" class="kpi-waiting">—</div>
                             <span class="kpi-subtext">Vehicles waiting</span>
                         </div>
 
@@ -84,37 +85,37 @@
                 </section>
 
                 <!-- Recent Exits Strip (ParkingHistoryStack · Bounded Deque LIFO) -->
-                <section style="margin-bottom:var(--space-6);" aria-labelledby="recent-exits-heading">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
-                        <h3 id="recent-exits-heading" style="font-size:var(--text-base); margin:0;">Recent Exits (Stack LIFO)</h3>
+                <section class="section-mb6" aria-labelledby="recent-exits-heading">
+                    <div class="section-row section-row-mb2">
+                        <h3 id="recent-exits-heading" class="section-h3-sm">Recent Exits (Stack LIFO)</h3>
                     </div>
 
                     <div id="recent-exits-container" class="recent-exits-strip">
-                        <div class="text-muted" style="font-size:var(--text-xs); padding:var(--space-2);">Loading recent exits...</div>
+                        <div class="text-muted loading-xs">Loading recent exits...</div>
                     </div>
                 </section>
 
                 <!-- Live Bay Layout -->
-                <section aria-labelledby="bay-grid-heading" style="margin-bottom:var(--space-8);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3); flex-wrap:wrap; gap:var(--space-2);">
+                <section aria-labelledby="bay-grid-heading" class="section-mb8">
+                    <div class="section-row-wrap">
                         <div>
-                            <h3 id="bay-grid-heading" style="margin:0;">Facility Bay Status</h3>
-                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Super Admin view: Unmasked vehicle plates and direct bay actions.</p>
+                            <h3 id="bay-grid-heading" class="section-h3">Facility Bay Status</h3>
+                            <p class="text-muted p-muted-xs">Super Admin view: Unmasked vehicle plates and direct bay actions.</p>
                         </div>
                         <a href="/admin/slots.html" class="btn btn-secondary btn-sm">Full Bay Manager &amp; Maintenance →</a>
                     </div>
 
                     <div id="dashboard-slots-grid" class="slot-grid">
-                        <div class="text-muted" style="font-size:var(--text-sm); padding:var(--space-4);">Loading parking bays...</div>
+                        <div class="text-muted loading-sm">Loading parking bays...</div>
                     </div>
                 </section>
 
                 <!-- Recent Activity Table -->
                 <section aria-labelledby="activity-heading">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3);">
+                    <div class="section-row section-row-mb3">
                         <div>
-                            <h3 id="activity-heading" style="margin:0;">Recent Activity Log</h3>
-                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Latest 10 parking sessions across the facility.</p>
+                            <h3 id="activity-heading" class="section-h3">Recent Activity Log</h3>
+                            <p class="text-muted p-muted-xs">Latest 10 parking sessions across the facility.</p>
                         </div>
                         <a href="/admin/history.html" class="btn btn-secondary btn-sm">View Full History →</a>
                     </div>
@@ -135,7 +136,7 @@
                             </thead>
                             <tbody id="activity-tbody">
                                 <tr>
-                                    <td colspan="7" style="text-align:center; padding:var(--space-6); color:var(--text-muted);">
+                                    <td colspan="7" class="td-center-muted">
                                         Loading recent activity...
                                     </td>
                                 </tr>
@@ -197,15 +198,15 @@
             if (!container) return;
 
             if (!exits || exits.length === 0) {
-                container.innerHTML = `<div class="text-muted" style="font-size:var(--text-xs); padding:var(--space-2);">No departures recorded yet today.</div>`;
+                container.innerHTML = `<div class="text-muted empty-strip-text">No departures recorded yet today.</div>`;
                 return;
             }
 
             container.innerHTML = exits.slice(0, 8).map(exit => `
                 <div class="exit-chip">
-                    <span class="plate-tag" style="font-size:0.75rem; padding:1px 5px;">${escapeHtml(formatPlate(exit.vehicleNumber))}</span>
-                    <span style="color:var(--text-muted);">Slot ${escapeHtml(exit.slotNumber)}</span>
-                    <span class="dsa-badge" style="font-size:0.65rem;">${escapeHtml(formatDuration(exit.durationSeconds))}</span>
+                    <span class="plate-tag plate-chip-sm">${escapeHtml(formatPlate(exit.vehicleNumber))}</span>
+                    <span class="text-muted-color">Slot ${escapeHtml(exit.slotNumber)}</span>
+                    <span class="dsa-badge text-2xs">${escapeHtml(formatDuration(exit.durationSeconds))}</span>
                 </div>
             `).join('');
         }
@@ -232,10 +233,10 @@
 
                         <div class="slot-tile-body">
                             ${isOccupied && slot.currentVehicleNumber ? `
-                                <div style="margin-bottom:var(--space-1);">
+                                <div class="section-mb1">
                                     <span class="plate-tag">${escapeHtml(formatPlate(slot.currentVehicleNumber))}</span>
                                 </div>
-                                <div style="font-size:var(--text-xs); color:var(--text-muted);">${escapeHtml(slot.currentOwnerName || 'Occupant')}</div>
+                                <div class="text-xs-muted">${escapeHtml(slot.currentOwnerName || 'Occupant')}</div>
                             ` : `
                                 <div class="status-chip ${escapeHtml(slot.status)}">
                                     <span class="status-dot"></span>
@@ -247,7 +248,7 @@
                         <div class="slot-tile-footer">
                             <span class="text-muted">Zone ${escapeHtml(slot.zone)} · F${escapeHtml(slot.floor)}</span>
                             ${isOccupied ? `
-                                <button type="button" class="btn btn-secondary btn-sm" style="font-size:0.7rem; padding:0 6px; min-height:26px;" onclick="window.openExitModal('${escapeHtml(slot.currentVehicleNumber)}', () => location.reload())">
+                                <button type="button" class="btn btn-secondary btn-sm btn-mini" onclick="window.openExitModal('${escapeHtml(slot.currentVehicleNumber)}', () => location.reload())">
                                     Exit
                                 </button>
                             ` : ''}
@@ -262,7 +263,7 @@
             if (!tbody) return;
 
             if (!activities || activities.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:var(--space-4); color:var(--text-muted);">No recent activity recorded.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="td-empty-muted">No recent activity recorded.</td></tr>`;
                 return;
             }
 
@@ -271,17 +272,17 @@
                 return `
                     <tr>
                         <td class="font-mono text-muted">#${act.id}</td>
-                        <td><span class="plate-tag" style="font-size:0.75rem;">${escapeHtml(formatPlate(act.vehicleNumber))}</span></td>
+                        <td><span class="plate-tag plate-tag-xs">${escapeHtml(formatPlate(act.vehicleNumber))}</span></td>
                         <td>${escapeHtml(act.ownerName || '—')}</td>
-                        <td class="font-mono" style="font-weight:700;">${escapeHtml(act.slotNumber || '—')}</td>
+                        <td class="font-mono font-bold">${escapeHtml(act.slotNumber || '—')}</td>
                         <td>
                             <span class="status-chip ${isAct ? 'OCCUPIED' : 'AVAILABLE'}">
                                 <span class="status-dot"></span>
                                 <span>${isAct ? 'PARKED' : 'DEPARTED'}</span>
                             </span>
                         </td>
-                        <td style="font-size:var(--text-xs);">${formatDateTime(act.entryTime)}</td>
-                        <td class="font-mono" style="font-size:var(--text-xs);">${act.durationFormatted || 'Active'}</td>
+                        <td class="text-xs-regular">${formatDateTime(act.entryTime)}</td>
+                        <td class="font-mono text-xs-regular">${act.durationFormatted || 'Active'}</td>
                     </tr>
                 `;
             }).join('');

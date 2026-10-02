@@ -1,24 +1,23 @@
 package com.smartparking.service;
 
 import com.smartparking.exception.AlreadyParkedException;
-import com.smartparking.exception.AlreadyWaitingException;
+
 import com.smartparking.exception.SlotOccupiedException;
 import com.smartparking.exception.VehicleNotFoundException;
 import com.smartparking.model.Priority;
 import com.smartparking.model.Role;
-import com.smartparking.model.SessionStatus;
+
 import com.smartparking.model.SlotStatus;
 import com.smartparking.model.SlotType;
 import com.smartparking.model.VehicleType;
 import com.smartparking.repository.ParkingSessionRepository;
 import com.smartparking.repository.ParkingSlotRepository;
-import com.smartparking.repository.VehicleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,8 +45,6 @@ class ParkingServiceIntegrationTest {
     @Autowired
     private ParkingSessionRepository sessionRepository;
 
-    @Autowired
-    private VehicleRepository vehicleRepository;
 
     @Autowired
     private VehicleService vehicleService;

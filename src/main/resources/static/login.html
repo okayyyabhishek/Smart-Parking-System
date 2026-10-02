@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
 
     <!-- Flash-free theme initialization -->
     <script type="module" src="/js/core/theme.js"></script>
@@ -93,8 +94,8 @@
             align-items: center;
             justify-content: space-between;
             background: rgba(0, 0, 0, 0.38);
-            backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -183,8 +184,8 @@
             width: 100%;
             max-width: 400px;
             background: rgba(10, 12, 18, 0.72);
-            backdrop-filter: blur(28px) saturate(1.6);
             -webkit-backdrop-filter: blur(28px) saturate(1.6);
+            backdrop-filter: blur(28px) saturate(1.6);
             border: 1px solid rgba(255,255,255,0.12);
             border-radius: 24px;
             padding: 40px 36px 36px;
@@ -535,8 +536,8 @@
             align-items: center;
             gap: 10px;
             background: rgba(10,12,18,0.72);
-            backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 999px;
             padding: 9px 16px;
@@ -619,13 +620,22 @@
             font-size: var(--text-xs);
             color: rgba(255,255,255,0.38);
             background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255,255,255,0.08);
         }
 
         .login-footer a { color: rgba(255,255,255,0.5); }
         .login-footer a:hover { color: #F2B705; }
+
+        /* Footer layout helpers (replaces inline styles) */
+        .login-footer-copy { margin-bottom: 6px; }
+        .login-footer-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .footer-sep { opacity: 0.3; }
+
+        /* Logo badge SVG z-index (replaces inline style) */
+        .logo-badge-svg { position: relative; z-index: 1; }
+
 
         /* ===================================================
            RESPONSIVE
@@ -654,7 +664,7 @@
         <!-- Logo lockup -->
         <a href="/login.html" class="logo-lockup" title="Smart Parking Allocation System">
             <div class="logo-badge">
-                <svg width="22" height="22" viewBox="0 0 64 64" fill="none" style="position:relative;z-index:1">
+                <svg width="22" height="22" viewBox="0 0 64 64" fill="none" class="logo-badge-svg">
                     <path d="M18 52V12H36C44.84 12 51 17.5 51 26.5C51 35.5 44.84 41 36 41H27V52H18ZM27 33H35.2C39.8 33 42.5 30.7 42.5 26.5C42.5 22.3 39.8 20 35.2 20H27V33Z" fill="#17191C"/>
                 </svg>
             </div>
@@ -755,14 +765,14 @@
          FOOTER
     =================================================== -->
     <footer class="login-footer">
-        <div style="margin-bottom:6px;">Smart Parking Allocation System &copy; 2026 · Java 21 &amp; Spring Boot · Suhani Parashar</div>
-        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <div class="login-footer-copy">Smart Parking Allocation System &copy; 2026 · Java 21 &amp; Spring Boot · Suhani Parashar</div>
+        <div class="login-footer-links">
             <a href="/login.html">Sign In</a>
-            <span style="opacity:0.3">·</span>
+            <span class="footer-sep">·</span>
             <a href="/viewer/index.html">Public Board</a>
-            <span style="opacity:0.3">·</span>
+            <span class="footer-sep">·</span>
             <a href="/operator/index.html">Operator Gate</a>
-            <span style="opacity:0.3">·</span>
+            <span class="footer-sep">·</span>
             <a href="/admin/index.html">Admin Control</a>
         </div>
     </footer>

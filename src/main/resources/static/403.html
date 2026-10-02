@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/tokens.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/inline-utils.css">
 
     <!-- Flash-free theme initialization -->
     <script type="module" src="/js/core/theme.js"></script>
@@ -93,10 +94,10 @@
 <body class="error-layout">
     <!-- Topbar -->
     <header class="topbar">
-        <div class="portal-stripe" style="background: repeating-linear-gradient(45deg, #E05624, #E05624 10px, #121417 10px, #121417 20px);"></div>
-        <div class="topbar-content" style="max-width: var(--layout-max-width); margin: 0 auto; padding: var(--space-3) var(--space-6); display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                <a href="/login.html" style="text-decoration: none; font-weight: 800; font-size: var(--text-lg); color: var(--text);">Smart Parking</a>
+        <div class="portal-stripe stripe-403"></div>
+        <div class="topbar-content error-topbar-inner">
+            <div class="error-topbar-brand">
+                <a href="/login.html" class="error-brand-link">Smart Parking</a>
                 <span class="dsa-badge">Access Control</span>
             </div>
             <button type="button" id="theme-toggle-btn" class="btn-icon" aria-label="Toggle theme" title="Toggle theme">
@@ -148,9 +149,9 @@
     </main>
 
     <!-- Footer -->
-    <footer style="text-align: center; padding: var(--space-4); font-size: var(--text-xs); color: var(--text-muted); border-top: 1px solid var(--border);">
-        <div style="margin-bottom: var(--space-2);">Smart Parking Allocation System &copy; 2026 · Pure Java 21 &amp; Spring Boot · Suhani Parashar</div>
-        <div style="display: flex; justify-content: center; gap: var(--space-3); flex-wrap: wrap;">
+    <footer class="error-footer">
+        <div class="error-footer-copy">Smart Parking Allocation System &copy; 2026 · Pure Java 21 &amp; Spring Boot · Suhani Parashar</div>
+        <div class="error-footer-links">
             <a href="/login.html" class="footer-link">Sign In</a>
             <span>·</span>
             <a href="/viewer/index.html" class="footer-link">Public Board</a>

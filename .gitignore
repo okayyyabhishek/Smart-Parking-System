@@ -14,3 +14,7 @@ data/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Cloudflare and local tools
+tools/
+*.log
