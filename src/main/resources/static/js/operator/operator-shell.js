@@ -20,14 +20,19 @@ export async function setupOperatorShell(activeNavId) {
     if (sidebarEl) {
         sidebarEl.innerHTML = `
             <div class="sidebar-header">
-                <a href="/operator/index.html" class="brand-link" title="Operator Workspace Dashboard">
-                    <div class="brand-badge" style="background-color: var(--st-available); color: #FFFFFF; align-self: flex-start;">GATE DESK</div>
-                    <h2 class="brand-title">Smart Parking</h2>
-                    <p class="brand-subtitle">Operator Workspace</p>
-                </a>
-                <button type="button" id="close-sidebar-btn" class="btn-icon sidebar-close-btn" aria-label="Close navigation drawer" style="display:none;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+                <div class="sidebar-brand-row">
+                    <a href="/operator/index.html" class="brand-link" title="Operator Workspace Dashboard">
+                        <div class="brand-badge" style="background-color: var(--st-available); color: #FFFFFF; align-self: flex-start;">GATE DESK</div>
+                        <h2 class="brand-title">Smart Parking</h2>
+                        <p class="brand-subtitle">Operator Workspace</p>
+                    </a>
+                    <button type="button" id="sidebar-collapse-btn" class="btn-icon sidebar-toggle-btn" aria-label="Close sidebar" title="Close sidebar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                            <path d="M9 3v18"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <nav class="sidebar-nav" aria-label="Operator Navigation">
@@ -78,11 +83,10 @@ export async function setupOperatorShell(activeNavId) {
             <div class="portal-stripe operator"></div>
             <div class="topbar-content">
                 <div class="topbar-left">
-                    <button type="button" id="mobile-nav-toggle" class="btn-icon mobile-menu-toggle" aria-label="Toggle navigation drawer" aria-expanded="false">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                    <button type="button" id="sidebar-toggle-btn" class="btn-icon sidebar-toggle-btn" aria-label="Toggle sidebar" aria-expanded="true" title="Toggle sidebar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                            <path d="M9 3v18"></path>
                         </svg>
                     </button>
                     <span class="role-badge operator">GATE DESK</span>
@@ -132,7 +136,19 @@ export async function setupOperatorShell(activeNavId) {
         appMainEl.appendChild(footerEl);
     }
 
-    // Mobile menu drawer toggle logic
+    // Sidebar Toggle Controller (Desktop Collapse + Mobile Drawer)
+    const appShellEl = document.querySelector('.app-shell');
+    const SIDEBAR_STATE_KEY = 'sp-sidebar-collapsed';
+
+    // Restore desktop collapsed state
+    if (window.innerWidth > 900) {
+        try {
+            if (localStorage.getItem(SIDEBAR_STATE_KEY) === 'true' && appShellEl) {
+                appShellEl.classList.add('sidebar-collapsed');
+            }
+        } catch (e) {}
+    }
+
     let backdrop = document.getElementById('sidebar-backdrop');
     if (!backdrop) {
         backdrop = document.createElement('div');
@@ -141,33 +157,50 @@ export async function setupOperatorShell(activeNavId) {
         document.body.appendChild(backdrop);
     }
 
-    const toggleBtn = document.getElementById('mobile-nav-toggle');
-    const closeBtn = document.getElementById('close-sidebar-btn');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const collapseBtn = document.getElementById('sidebar-collapse-btn');
 
-    function toggleDrawer(open) {
-        if (!sidebarEl) return;
-        const shouldOpen = open !== undefined ? open : !sidebarEl.classList.contains('is-open');
-        sidebarEl.classList.toggle('is-open', shouldOpen);
-        backdrop.classList.toggle('is-visible', shouldOpen);
-        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(shouldOpen));
-        if (closeBtn) closeBtn.style.display = shouldOpen ? 'inline-flex' : 'none';
+    function toggleSidebar(forceOpen) {
+        const isMobile = window.innerWidth <= 900;
+        if (isMobile) {
+            // Mobile sliding drawer
+            const shouldOpen = forceOpen !== undefined ? forceOpen : !sidebarEl.classList.contains('is-open');
+            sidebarEl.classList.toggle('is-open', shouldOpen);
+            backdrop.classList.toggle('is-visible', shouldOpen);
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(shouldOpen));
+        } else {
+            // Desktop collapsible sidebar
+            if (!appShellEl) return;
+            const willCollapse = forceOpen !== undefined ? !forceOpen : !appShellEl.classList.contains('sidebar-collapsed');
+            appShellEl.classList.toggle('sidebar-collapsed', willCollapse);
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(!willCollapse));
+            try {
+                localStorage.setItem(SIDEBAR_STATE_KEY, String(willCollapse));
+            } catch (e) {}
+        }
     }
 
-    if (toggleBtn) toggleBtn.addEventListener('click', () => toggleDrawer());
-    if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
-    backdrop.addEventListener('click', () => toggleDrawer(false));
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => toggleSidebar());
+    }
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', () => toggleSidebar(false));
+    }
+    backdrop.addEventListener('click', () => toggleSidebar(false));
 
     if (sidebarEl) {
         sidebarEl.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
-                if (window.innerWidth <= 900) toggleDrawer(false);
+                if (window.innerWidth <= 900) toggleSidebar(false);
             });
         });
     }
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebarEl && sidebarEl.classList.contains('is-open')) {
-            toggleDrawer(false);
+        if (e.key === 'Escape') {
+            if (window.innerWidth <= 900 && sidebarEl && sidebarEl.classList.contains('is-open')) {
+                toggleSidebar(false);
+            }
         }
     });
 
