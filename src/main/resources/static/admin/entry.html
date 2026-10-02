@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Park Vehicle — Super Admin Console</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-admin.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="admin-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="admin-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Header -->
+                <div style="margin-bottom:var(--space-6);">
+                    <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                        <h1>Vehicle Admission &amp; Bay Allocation</h1>
+                        <span class="dsa-badge">Slot Allocation · Matrix Priority &amp; Rank Comparator · O(k log k)</span>
+                    </div>
+                    <p class="text-muted" style="margin:0;">
+                        Super Admin admission gateway. Computes compatibility against facility bays, assigns optimal slots, or routes to the PriorityQueue.
+                    </p>
+                </div>
+
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:var(--space-6); align-items:start;">
+                    <!-- Entry Form Card -->
+                    <div class="form-card" style="max-width:none;">
+                        <h2 style="font-size:var(--text-lg); margin-bottom:var(--space-4);">Gate Entry Form</h2>
+
+                        <!-- Quick Demo Data Chips -->
+                        <div style="margin-bottom:var(--space-4); padding-bottom:var(--space-3); border-bottom:1px dashed var(--border);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
+                                <span style="font-size:var(--text-xs); font-weight:700; color:var(--text-muted); text-transform:uppercase;">Evaluator Test Scenarios</span>
+                                <span class="dsa-badge" style="font-size:0.65rem;">Click to fill</span>
+                            </div>
+                            <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+                                <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB10AB5501" data-type="CAR" data-owner="Vikram Malhotra" data-contact="9876540001" data-priority="NORMAL">
+                                    🚗 Standard Car
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB10EV7702" data-type="EV" data-owner="Ananya Sharma" data-contact="9876540002" data-priority="NORMAL">
+                                    ⚡ Electric EV
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB08SUV9903" data-type="SUV" data-owner="Harpreet Singh" data-contact="9876540003" data-priority="NORMAL">
+                                    🚙 Large SUV
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm test-chip" data-plate="PB10EM0108" data-type="CAR" data-owner="City Hospital ER" data-contact="9876540108" data-priority="EMERGENCY">
+                                    🚨 Emergency Priority
+                                </button>
+                            </div>
+                        </div>
+
+                        <form id="entry-form" novalidate>
+                            <!-- License Plate -->
+                            <div class="form-group">
+                                <label for="vehicle-number" class="form-label">
+                                    <span>License Plate Number</span>
+                                    <span class="helper">Indian Standard Format (e.g. PB10AB1234)</span>
+                                </label>
+                                <input type="text" id="vehicle-number" class="form-input font-mono" required placeholder="PB10AB1234" maxlength="13" style="text-transform:uppercase;">
+                                <div id="plate-error" class="form-error" style="display:none;"></div>
+                            </div>
+
+                            <!-- Vehicle Type Segmented Control -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span>Vehicle Type</span>
+                                    <span class="helper">Determines slot compatibility &amp; ranking</span>
+                                </label>
+                                <div class="segmented-control" id="type-control" role="radiogroup" aria-label="Vehicle Type">
+                                    <button type="button" class="segmented-option selected" data-value="CAR" role="radio" aria-checked="true">
+                                        <span style="font-size:1.1rem;">🚗</span>
+                                        <span>CAR</span>
+                                    </button>
+                                    <button type="button" class="segmented-option" data-value="MOTORCYCLE" role="radio" aria-checked="false">
+                                        <span style="font-size:1.1rem;">🏍️</span>
+                                        <span>BIKE</span>
+                                    </button>
+                                    <button type="button" class="segmented-option" data-value="SUV" role="radio" aria-checked="false">
+                                        <span style="font-size:1.1rem;">🚙</span>
+                                        <span>SUV</span>
+                                    </button>
+                                    <button type="button" class="segmented-option" data-value="EV" role="radio" aria-checked="false">
+                                        <span style="font-size:1.1rem;">⚡</span>
+                                        <span>EV</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Owner Name & Contact Number -->
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:var(--space-3);">
+                                <div class="form-group">
+                                    <label for="owner-name" class="form-label">Owner Name</label>
+                                    <input type="text" id="owner-name" class="form-input" required placeholder="e.g. Rahul Verma">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-number" class="form-label">
+                                        <span>Contact Number</span>
+                                    </label>
+                                    <input type="tel" id="contact-number" class="form-input" required placeholder="10-digit mobile" maxlength="10">
+                                </div>
+                            </div>
+
+                            <!-- Priority Level Segmented Control -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span>Queue Priority Level</span>
+                                    <span class="helper">EMERGENCY &gt; HIGH &gt; NORMAL in PriorityQueue</span>
+                                </label>
+                                <div class="segmented-control" id="priority-control" role="radiogroup" aria-label="Queue Priority">
+                                    <button type="button" class="segmented-option selected" data-value="NORMAL" role="radio" aria-checked="true">
+                                        <span>NORMAL (0)</span>
+                                    </button>
+                                    <button type="button" class="segmented-option" data-value="HIGH" role="radio" aria-checked="false">
+                                        <span style="color:var(--st-waiting);">HIGH (1)</span>
+                                    </button>
+                                    <button type="button" class="segmented-option" data-value="EMERGENCY" role="radio" aria-checked="false">
+                                        <span style="color:var(--st-occupied);">EMERGENCY (2)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="submit-entry-btn" class="btn btn-primary" style="width:100%; margin-top:var(--space-2);">
+                                <span>Compute Allocation &amp; Assign Slot</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Allocation Result Side Panel -->
+                    <div id="allocation-result-container">
+                        <div class="empty-state" id="result-placeholder">
+                            <div style="font-size:2.5rem; margin-bottom:var(--space-2);">🅿️</div>
+                            <h3 class="empty-state-title">Awaiting Vehicle Entry</h3>
+                            <p class="empty-state-text">
+                                Complete the form on the left. The allocation engine will inspect slot availability, apply the compatibility matrix, and present the result here.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupAdminShell } from '/js/admin/admin-shell.js';
+        import { api } from '/js/core/api.js';
+        import { toast } from '/js/core/toast.js';
+        import { formatPlate, formatDateTime, escapeHtml } from '/js/core/format.js';
+
+        let selectedType = 'CAR';
+        let selectedPriority = 'NORMAL';
+
+        async function init() {
+            await setupAdminShell('entry');
+            setupControls();
+        }
+
+        function setupControls() {
+            // Type segmented control
+            const typeBtns = document.querySelectorAll('#type-control .segmented-option');
+            typeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    typeBtns.forEach(b => {
+                        b.classList.remove('selected');
+                        b.setAttribute('aria-checked', 'false');
+                    });
+                    btn.classList.add('selected');
+                    btn.setAttribute('aria-checked', 'true');
+                    selectedType = btn.dataset.value;
+                });
+            });
+
+            // Priority segmented control
+            const priorityBtns = document.querySelectorAll('#priority-control .segmented-option');
+            priorityBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    priorityBtns.forEach(b => {
+                        b.classList.remove('selected');
+                        b.setAttribute('aria-checked', 'false');
+                    });
+                    btn.classList.add('selected');
+                    btn.setAttribute('aria-checked', 'true');
+                    selectedPriority = btn.dataset.value;
+                });
+            });
+
+            // Quick demo chips
+            document.querySelectorAll('.test-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.getElementById('vehicle-number').value = chip.dataset.plate;
+                    document.getElementById('owner-name').value = chip.dataset.owner;
+                    document.getElementById('contact-number').value = chip.dataset.contact;
+
+                    typeBtns.forEach(b => {
+                        const match = b.dataset.value === chip.dataset.type;
+                        b.classList.toggle('selected', match);
+                        b.setAttribute('aria-checked', match);
+                    });
+                    selectedType = chip.dataset.type;
+
+                    priorityBtns.forEach(b => {
+                        const match = b.dataset.value === chip.dataset.priority;
+                        b.classList.toggle('selected', match);
+                        b.setAttribute('aria-checked', match);
+                    });
+                    selectedPriority = chip.dataset.priority;
+
+                    document.getElementById('plate-error').style.display = 'none';
+                });
+            });
+
+            // Form submission
+            const form = document.getElementById('entry-form');
+            const submitBtn = document.getElementById('submit-entry-btn');
+            const plateError = document.getElementById('plate-error');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                plateError.style.display = 'none';
+
+                const vehicleNumber = document.getElementById('vehicle-number').value.trim().toUpperCase();
+                const ownerName = document.getElementById('owner-name').value.trim();
+                const contact = document.getElementById('contact-number').value.trim();
+
+                if (!vehicleNumber || !ownerName || !contact) {
+                    plateError.textContent = 'Please fill out all required fields.';
+                    plateError.style.display = 'flex';
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<span>Computing Allocation...</span>`;
+
+                try {
+                    const result = await api.post('/api/admin/parking/entry', {
+                        vehicleNumber,
+                        vehicleType: selectedType,
+                        ownerName,
+                        contact,
+                        priority: selectedPriority
+                    });
+
+                    renderAllocationResult(vehicleNumber, result);
+                    toast.success(
+                        result.allocated 
+                            ? `Vehicle ${vehicleNumber} assigned to slot ${result.slotNumber}!` 
+                            : `Vehicle ${vehicleNumber} enqueued at position #${result.queuePosition}`,
+                        result.allocated ? 'Slot Allocated' : 'Enqueued in PriorityQueue'
+                    );
+
+                    document.getElementById('vehicle-number').value = '';
+                    document.getElementById('owner-name').value = '';
+                    document.getElementById('contact-number').value = '';
+
+                } catch (err) {
+                    plateError.textContent = err.message || 'Unable to park vehicle. Please check input.';
+                    plateError.style.display = 'flex';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `
+                        <span>Compute Allocation &amp; Assign Slot</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    `;
+                }
+            });
+        }
+
+        function renderAllocationResult(plate, result) {
+            const container = document.getElementById('allocation-result-container');
+            if (!container) return;
+
+            if (result.allocated) {
+                container.innerHTML = `
+                    <div class="allocation-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="status-chip AVAILABLE">
+                                <span class="status-dot"></span>
+                                <span>BAY ALLOCATED</span>
+                            </span>
+                            <span class="dsa-badge">Ranked Lowest Slot · O(k log k)</span>
+                        </div>
+
+                        <div class="allocation-slot-huge">${escapeHtml(result.slotNumber)}</div>
+                        <div style="font-size:var(--text-sm); font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:var(--space-3);">
+                            Slot Type: <span style="color:var(--text);">${escapeHtml(result.slotType)}</span> · Vehicle: <span class="plate-tag">${escapeHtml(formatPlate(plate))}</span>
+                        </div>
+
+                        <div class="allocation-reason">
+                            <strong>Allocation Reason:</strong><br>
+                            ${escapeHtml(result.reason)}
+                        </div>
+
+                        <div style="padding-top:var(--space-3); border-top:1px dashed var(--border); font-size:var(--text-xs); color:var(--text-muted); display:flex; justify-content:space-between;">
+                            <span>Session ID: #${result.sessionId || '—'}</span>
+                            <span>Admitted: ${formatDateTime(result.entryTime || new Date().toISOString())}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="allocation-card queued">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="status-chip WAITING">
+                                <span class="status-dot"></span>
+                                <span>ENQUEUED IN WAITING QUEUE</span>
+                            </span>
+                            <span class="dsa-badge">PriorityQueue · O(log n)</span>
+                        </div>
+
+                        <div class="allocation-slot-huge" style="color:var(--st-waiting);">#${result.queuePosition}</div>
+                        <div style="font-size:var(--text-sm); font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:var(--space-3);">
+                            Queue Position · Vehicle: <span class="plate-tag">${escapeHtml(formatPlate(plate))}</span>
+                        </div>
+
+                        <div class="allocation-reason">
+                            <strong>Reason:</strong><br>
+                            ${escapeHtml(result.reason)}
+                        </div>
+
+                        <div style="padding-top:var(--space-3); border-top:1px dashed var(--border); font-size:var(--text-xs); color:var(--text-muted);">
+                            The vehicle will be automatically reallocated to the next compatible bay freed upon departure.
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

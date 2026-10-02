@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>System Audit Log — Smart Parking Allocation System</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-admin.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="admin-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="admin-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title & Header Actions -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>System Audit Trail</h1>
+                            <span class="dsa-badge">Immutable Audit Log · Append-Only Ledger · O(1) Writes</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">
+                            Tamper-evident operational and administrative audit records. Captures authentication, gate actions, bay updates, and user governance.
+                        </p>
+                    </div>
+
+                    <div style="display:flex; gap:var(--space-3); align-items:center;">
+                        <button type="button" id="export-csv-btn" class="btn btn-secondary btn-sm">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <span>Export CSV</span>
+                        </button>
+                        <button type="button" id="refresh-audit-btn" class="btn btn-secondary btn-sm">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                            <span>Refresh Log</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Filter Toolbar -->
+                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-direction:column; gap:var(--space-3);">
+                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; justify-content:space-between;">
+                        <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                            <input type="text" id="audit-search-input" class="form-input" placeholder="Search actor, IP, target details..." style="width:280px;">
+
+                            <select id="action-filter" class="form-select" aria-label="Filter by Audit Action">
+                                <option value="">All Actions</option>
+                                <option value="LOGIN_SUCCESS">LOGIN_SUCCESS</option>
+                                <option value="LOGIN_FAILED">LOGIN_FAILED</option>
+                                <option value="PARK_ENTRY">PARK_ENTRY</option>
+                                <option value="PARK_EXIT">PARK_EXIT</option>
+                                <option value="SLOT_REALLOCATED">SLOT_REALLOCATED</option>
+                                <option value="SLOT_CREATE">SLOT_CREATE</option>
+                                <option value="SLOT_MAINTENANCE">SLOT_MAINTENANCE</option>
+                                <option value="USER_CREATE">USER_CREATE</option>
+                                <option value="USER_TOGGLE_ENABLED">USER_TOGGLE_ENABLED</option>
+                                <option value="USER_RESET_PASSWORD">USER_RESET_PASSWORD</option>
+                            </select>
+
+                            <select id="role-filter" class="form-select" aria-label="Filter by Actor Role">
+                                <option value="">All Roles</option>
+                                <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                                <option value="OPERATOR">OPERATOR</option>
+                                <option value="VIEWER">VIEWER</option>
+                            </select>
+                        </div>
+
+                        <div id="audit-count-badge" class="dsa-badge">
+                            Showing 0 entries
+                        </div>
+                    </div>
+
+                    <!-- Quick Date Range Filters -->
+                    <div style="display:flex; gap:var(--space-2); align-items:center; flex-wrap:wrap; padding-top:var(--space-2); border-top:1px dashed var(--border);">
+                        <span style="font-size:var(--text-xs); color:var(--text-muted); font-weight:700;">Date Range:</span>
+                        <button type="button" class="btn btn-secondary btn-sm date-filter-chip active" data-range="all">All Time</button>
+                        <button type="button" class="btn btn-secondary btn-sm date-filter-chip" data-range="today">Today</button>
+                        <button type="button" class="btn btn-secondary btn-sm date-filter-chip" data-range="7days">Last 7 Days</button>
+                    </div>
+                </div>
+
+                <!-- Audit Table Container -->
+                <div id="audit-table-container">
+                    <div class="text-muted" style="padding:var(--space-4);">Loading audit ledger...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupAdminShell } from '/js/admin/admin-shell.js';
+        import { api } from '/js/core/api.js';
+        import { DataTable } from '/js/core/table.js';
+        import { toast } from '/js/core/toast.js';
+        import { formatDateTime, escapeHtml } from '/js/core/format.js';
+
+        let auditLogs = [];
+        let dataTable = null;
+        let selectedDateRange = 'all';
+
+        async function init() {
+            await setupAdminShell('audit');
+            setupFilters();
+            setupExport();
+            await loadAuditLogs();
+        }
+
+        async function loadAuditLogs() {
+            try {
+                auditLogs = await api.get('/api/admin/audit');
+                renderTable();
+            } catch (err) {
+                console.error('Failed to load audit logs', err);
+            }
+        }
+
+        function getFilteredLogs() {
+            const query = (document.getElementById('audit-search-input').value || '').trim().toLowerCase();
+            const actionFilter = document.getElementById('action-filter').value;
+            const roleFilter = document.getElementById('role-filter').value;
+
+            const now = new Date();
+            let dateCutoff = null;
+
+            if (selectedDateRange === 'today') {
+                dateCutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            } else if (selectedDateRange === '7days') {
+                dateCutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            }
+
+            return auditLogs.filter(log => {
+                if (actionFilter && log.action !== actionFilter) return false;
+                if (roleFilter && log.role !== roleFilter) return false;
+
+                if (dateCutoff) {
+                    const logDate = new Date(log.timestamp);
+                    if (logDate < dateCutoff) return false;
+                }
+
+                if (query) {
+                    const matchActor = log.username && log.username.toLowerCase().includes(query);
+                    const matchAction = log.action && log.action.toLowerCase().includes(query);
+                    const matchTarget = log.target && log.target.toLowerCase().includes(query);
+                    const matchIp = log.ip && log.ip.toLowerCase().includes(query);
+                    if (!matchActor && !matchAction && !matchTarget && !matchIp) return false;
+                }
+
+                return true;
+            });
+        }
+
+        function renderTable() {
+            const container = document.getElementById('audit-table-container');
+            if (!container) return;
+
+            const filtered = getFilteredLogs();
+            document.getElementById('audit-count-badge').textContent = `Showing ${filtered.length} of ${auditLogs.length} audit records`;
+
+            if (!dataTable) {
+                dataTable = new DataTable({
+                    container,
+                    caption: 'System Governance Audit Trail',
+                    dsaAnnotation: 'Immutable Audit Log · Append-Only Ledger · O(1) Writes',
+                    emptyMessage: 'No matching audit records found.',
+                    columns: [
+                        {
+                            key: 'id',
+                            label: 'Log ID',
+                            sortable: true,
+                            render: (val) => `<span class="font-mono text-muted">#${val}</span>`
+                        },
+                        {
+                            key: 'timestamp',
+                            label: 'Timestamp (IST)',
+                            sortable: true,
+                            render: (val) => `<span style="font-size:var(--text-xs); white-space:nowrap;">${formatDateTime(val)}</span>`
+                        },
+                        {
+                            key: 'username',
+                            label: 'Actor',
+                            sortable: true,
+                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val || 'anonymous')}</span>`
+                        },
+                        {
+                            key: 'role',
+                            label: 'Role',
+                            sortable: true,
+                            render: (val) => {
+                                if (!val) return '<span class="text-muted">—</span>';
+                                const cls = val === 'SUPER_ADMIN' ? 'admin' : val.toLowerCase();
+                                return `<span class="role-badge ${cls}" style="font-size:0.65rem;">${escapeHtml(val)}</span>`;
+                            }
+                        },
+                        {
+                            key: 'action',
+                            label: 'Action Code',
+                            sortable: true,
+                            render: (val) => `<span class="audit-action-tag">${escapeHtml(val)}</span>`
+                        },
+                        {
+                            key: 'target',
+                            label: 'Audit Target & Details',
+                            render: (val) => `<span style="font-size:var(--text-xs); word-break:break-word;">${escapeHtml(val || '—')}</span>`
+                        },
+                        {
+                            key: 'ip',
+                            label: 'IP Origin',
+                            render: (val) => `<span class="font-mono text-muted" style="font-size:0.75rem;">${escapeHtml(val || '—')}</span>`
+                        }
+                    ]
+                });
+            }
+
+            dataTable.setData(filtered);
+        }
+
+        function setupFilters() {
+            document.getElementById('audit-search-input').addEventListener('input', () => renderTable());
+            document.getElementById('action-filter').addEventListener('change', () => renderTable());
+            document.getElementById('role-filter').addEventListener('change', () => renderTable());
+            document.getElementById('refresh-audit-btn').addEventListener('click', loadAuditLogs);
+
+            // Date Range chips
+            const chips = document.querySelectorAll('.date-filter-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    selectedDateRange = chip.dataset.range;
+                    renderTable();
+                });
+            });
+        }
+
+        function setupExport() {
+            const exportBtn = document.getElementById('export-csv-btn');
+            exportBtn.addEventListener('click', () => {
+                const rows = getFilteredLogs();
+                if (rows.length === 0) {
+                    toast.info('No audit records to export.', 'Export Empty');
+                    return;
+                }
+
+                const headers = ['ID', 'Timestamp', 'Actor', 'Role', 'Action', 'Target', 'IP'];
+                const csvLines = [headers.join(',')];
+
+                rows.forEach(r => {
+                    const line = [
+                        r.id,
+                        `"${r.timestamp || ''}"`,
+                        `"${r.username || ''}"`,
+                        `"${r.role || ''}"`,
+                        `"${r.action || ''}"`,
+                        `"${(r.target || '').replace(/"/g, '""')}"`,
+                        `"${r.ip || ''}"`
+                    ];
+                    csvLines.push(line.join(','));
+                });
+
+                const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `smart-parking-audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                toast.success(`Exported ${rows.length} records to CSV.`, 'Download Ready');
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>

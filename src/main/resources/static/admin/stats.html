@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Facility Analytics — Super Admin Console</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-admin.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="admin-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="admin-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>System-Wide Telemetry &amp; Analytics</h1>
+                            <span class="dsa-badge">Metrics Engine · 100% Computed From DB · O(n)</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">
+                            Performance telemetry, turnover statistics, and capacity allocation metrics computed directly from database records.
+                        </p>
+                    </div>
+
+                    <button type="button" id="refresh-stats-btn" class="btn btn-secondary btn-sm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        <span>Refresh Metrics</span>
+                    </button>
+                </div>
+
+                <!-- Primary KPI Numbers -->
+                <div class="kpi-grid">
+                    <div class="kpi-card highlight">
+                        <span class="kpi-label">Total Vehicles Served</span>
+                        <div class="kpi-value" id="stat-served">—</div>
+                        <span class="kpi-subtext">Lifetime completed sessions</span>
+                    </div>
+
+                    <div class="kpi-card">
+                        <span class="kpi-label">Average Stay Duration</span>
+                        <div class="kpi-value" id="stat-duration" style="font-size:var(--text-2xl);">—</div>
+                        <span class="kpi-subtext">Across departed vehicles</span>
+                    </div>
+
+                    <div class="kpi-card">
+                        <span class="kpi-label">Highest Demand Bay</span>
+                        <div class="kpi-value" id="stat-slot" style="font-size:var(--text-2xl); font-family:var(--font-mono);">—</div>
+                        <span class="kpi-subtext">Most frequently occupied bay</span>
+                    </div>
+
+                    <div class="kpi-card">
+                        <span class="kpi-label">Prevalent Vehicle Class</span>
+                        <div class="kpi-value" id="stat-vehicletype" style="font-size:var(--text-2xl);">—</div>
+                        <span class="kpi-subtext">Most frequent vehicle type</span>
+                    </div>
+                </div>
+
+                <!-- Secondary Operational Indicators -->
+                <div class="kpi-grid" style="margin-top:var(--space-4);">
+                    <div class="kpi-card">
+                        <span class="kpi-label">Current Parked</span>
+                        <div class="kpi-value" id="stat-parked" style="color:var(--st-occupied);">—</div>
+                        <span class="kpi-subtext">Active vehicle sessions</span>
+                    </div>
+
+                    <div class="kpi-card">
+                        <span class="kpi-label">Available Capacity</span>
+                        <div class="kpi-value" id="stat-available" style="color:var(--st-available);">—</div>
+                        <span class="kpi-subtext">Open for assignment</span>
+                    </div>
+
+                    <div class="kpi-card">
+                        <span class="kpi-label">Waiting Vehicles</span>
+                        <div class="kpi-value" id="stat-waiting" style="color:var(--st-waiting);">—</div>
+                        <span class="kpi-subtext">In PriorityQueue heap</span>
+                    </div>
+
+                    <div class="kpi-card">
+                        <span class="kpi-label">Today's Total Flow</span>
+                        <div class="kpi-value" id="stat-flow">—</div>
+                        <span class="kpi-subtext" id="stat-flow-sub">Entries &amp; Exits</span>
+                    </div>
+                </div>
+
+                <!-- Breakdown by Slot Type -->
+                <section aria-labelledby="breakdown-heading" style="margin-top:var(--space-6);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3);">
+                        <h2 id="breakdown-heading" style="font-size:var(--text-lg); margin:0;">Facility Bay Classification &amp; Utilization</h2>
+                        <span class="dsa-badge">Slot Allocation Partitioning</span>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <caption>Live Capacity by Bay Type</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Bay Type</th>
+                                    <th scope="col">Total Bays</th>
+                                    <th scope="col">Available</th>
+                                    <th scope="col">Occupied</th>
+                                    <th scope="col">Under Maintenance</th>
+                                    <th scope="col">Utilization</th>
+                                </tr>
+                            </thead>
+                            <tbody id="breakdown-tbody">
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding:var(--space-6); color:var(--text-muted);">
+                                        Loading capacity breakdown...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupAdminShell } from '/js/admin/admin-shell.js';
+        import { api } from '/js/core/api.js';
+        import { escapeHtml } from '/js/core/format.js';
+
+        async function init() {
+            await setupAdminShell('stats');
+            document.getElementById('refresh-stats-btn').addEventListener('click', loadStats);
+            await loadStats();
+        }
+
+        async function loadStats() {
+            try {
+                const stats = await api.get('/api/admin/statistics');
+
+                document.getElementById('stat-served').textContent = stats.totalVehiclesServed;
+                document.getElementById('stat-duration').textContent = stats.averageParkingDurationFormatted || '0s';
+                document.getElementById('stat-slot').textContent = stats.mostUsedSlot || 'N/A';
+                document.getElementById('stat-vehicletype').textContent = stats.mostCommonVehicleType || 'N/A';
+
+                document.getElementById('stat-parked').textContent = stats.currentParked;
+                document.getElementById('stat-available').textContent = stats.availableSlots;
+                document.getElementById('stat-waiting').textContent = stats.waitingVehicles;
+                document.getElementById('stat-flow').textContent = stats.todaysEntries + stats.todaysExits;
+                document.getElementById('stat-flow-sub').textContent = `In: ${stats.todaysEntries} | Out: ${stats.todaysExits}`;
+
+                renderBreakdown(stats.availabilityByType);
+            } catch (err) {
+                console.error('Failed to load statistics', err);
+            }
+        }
+
+        function renderBreakdown(byType) {
+            const tbody = document.getElementById('breakdown-tbody');
+            if (!tbody) return;
+
+            if (!byType || Object.keys(byType).length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:var(--space-4);">No capacity data available.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = Object.entries(byType).map(([type, data]) => {
+                const activeTotal = data.total - data.maintenance;
+                const utilPercent = activeTotal > 0 ? Math.round((data.occupied / activeTotal) * 100) : 0;
+
+                return `
+                    <tr>
+                        <td>
+                            <span class="slot-type-badge ${escapeHtml(type)}">${escapeHtml(type)}</span>
+                        </td>
+                        <td class="font-mono"><strong>${data.total}</strong></td>
+                        <td style="color:var(--st-available); font-weight:700;" class="font-mono">${data.available}</td>
+                        <td style="color:var(--st-occupied); font-weight:700;" class="font-mono">${data.occupied}</td>
+                        <td style="color:var(--st-maint);" class="font-mono">${data.maintenance}</td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div style="flex:1; height:6px; background:var(--surface-2); border-radius:var(--radius-sm); overflow:hidden;">
+                                    <div style="width:${utilPercent}%; height:100%; background:${utilPercent > 80 ? 'var(--st-occupied)' : 'var(--st-available)'};"></div>
+                                </div>
+                                <span class="font-mono" style="font-size:var(--text-xs); min-width:36px;">${utilPercent}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        init();
+    </script>
+</body>
+</html>

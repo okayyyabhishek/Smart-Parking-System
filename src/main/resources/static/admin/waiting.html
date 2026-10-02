@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Waiting Queue — Super Admin Console</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-admin.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="admin-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="admin-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>Waiting Priority Queue</h1>
+                            <span class="dsa-badge">Waiting Queue · PriorityQueue · O(log n)</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">
+                            Live binary heap of pending vehicles ordered by Priority (EMERGENCY &gt; HIGH &gt; NORMAL) and FIFO arrival time.
+                        </p>
+                    </div>
+
+                    <button type="button" id="refresh-queue-btn" class="btn btn-secondary btn-sm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        <span>Refresh Queue</span>
+                    </button>
+                </div>
+
+                <!-- Explanation Banner for Viva -->
+                <div style="background-color:var(--surface); border:1px solid var(--border); border-left:4px solid var(--st-waiting); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
+                        <strong style="font-size:var(--text-sm);">Smart Reallocation &amp; Admin Audit View:</strong>
+                        <span class="dsa-badge">Full Unmasked Telemetry</span>
+                    </div>
+                    <p style="font-size:var(--text-xs); color:var(--text-muted); margin:0; line-height:1.5;">
+                        Super Admin view displays unmasked vehicle plates, owner identities, and direct contact numbers. As slots are released upon exit, the reallocation engine automatically assigns the released bay to the highest-priority compatible vehicle.
+                    </p>
+                </div>
+
+                <!-- Queue Container -->
+                <div id="queue-container">
+                    <div class="text-muted" style="padding:var(--space-4);">Loading waiting vehicles...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupAdminShell } from '/js/admin/admin-shell.js';
+        import { api } from '/js/core/api.js';
+        import { DataTable } from '/js/core/table.js';
+        import { formatPlate, formatDuration, formatDateTime, escapeHtml } from '/js/core/format.js';
+
+        let queueData = [];
+        let timerInterval = null;
+
+        async function init() {
+            await setupAdminShell('waiting');
+            document.getElementById('refresh-queue-btn').addEventListener('click', loadQueue);
+            await loadQueue();
+
+            // Auto-refresh every 10 seconds
+            setInterval(loadQueue, 10000);
+
+            // Increment elapsed waiting seconds locally every second
+            timerInterval = setInterval(() => {
+                if (queueData.length > 0) {
+                    renderQueue();
+                }
+            }, 1000);
+        }
+
+        async function loadQueue() {
+            try {
+                queueData = await api.get('/api/admin/parking/waiting');
+                renderQueue();
+            } catch (err) {
+                console.error('Failed to load waiting queue', err);
+            }
+        }
+
+        function renderQueue() {
+            const container = document.getElementById('queue-container');
+            if (!container) return;
+
+            if (queueData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size:2.5rem; margin-bottom:var(--space-2);">✅</div>
+                        <h3 class="empty-state-title">Waiting Queue is Empty</h3>
+                        <p class="empty-state-text">There are currently no waiting vehicles. All vehicles are allocated to bays or parking is operating within capacity.</p>
+                        <a href="/admin/entry.html" class="btn btn-primary btn-sm">Park a Vehicle</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const table = new DataTable({
+                container,
+                caption: `Active Waiting Queue (${queueData.length} vehicles waiting)`,
+                dsaAnnotation: 'Waiting Queue · PriorityQueue · O(log n)',
+                emptyMessage: 'No vehicles waiting.',
+                columns: [
+                    {
+                        key: 'queuePosition',
+                        label: 'Pos',
+                        sortable: true,
+                        render: (val) => `<span style="font-family:var(--font-mono); font-weight:800; font-size:var(--text-md); color:var(--st-waiting);">#${val}</span>`
+                    },
+                    {
+                        key: 'vehicleNumber',
+                        label: 'License Plate',
+                        sortable: true,
+                        render: (val) => `<span class="plate-tag">${escapeHtml(formatPlate(val))}</span>`
+                    },
+                    {
+                        key: 'vehicleType',
+                        label: 'Type',
+                        sortable: true,
+                        render: (val) => `<span class="slot-type-badge ${escapeHtml(val)}">${escapeHtml(val)}</span>`
+                    },
+                    {
+                        key: 'priority',
+                        label: 'Priority',
+                        sortable: true,
+                        render: (val) => {
+                            let color = 'var(--text-muted)';
+                            let bg = 'var(--surface-2)';
+                            if (val === 'EMERGENCY') { color = 'var(--st-occupied)'; bg = 'var(--st-occupied-bg)'; }
+                            if (val === 'HIGH') { color = 'var(--st-waiting)'; bg = 'var(--st-waiting-bg)'; }
+                            return `<span style="font-size:var(--text-xs); font-weight:800; color:${color}; background:${bg}; padding:2px 8px; border-radius:var(--radius-sm); border:1px solid currentColor;">${escapeHtml(val)}</span>`;
+                        }
+                    },
+                    {
+                        key: 'ownerName',
+                        label: 'Owner Name',
+                        sortable: true,
+                        render: (val) => escapeHtml(val || '—')
+                    },
+                    {
+                        key: 'contact',
+                        label: 'Contact (Unmasked)',
+                        render: (val) => `<span class="font-mono">${escapeHtml(val || '—')}</span>`
+                    },
+                    {
+                        key: 'waitingSince',
+                        label: 'Enqueued At',
+                        sortable: true,
+                        render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                    },
+                    {
+                        key: 'waitingSeconds',
+                        label: 'Wait Time (Live)',
+                        render: (_, row) => {
+                            const waitSeconds = Math.max(0, Math.floor((Date.now() - new Date(row.waitingSince).getTime()) / 1000));
+                            return `<span class="dsa-badge" style="color:var(--st-waiting); font-weight:700;">⏱️ ${formatDuration(waitSeconds)}</span>`;
+                        }
+                    }
+                ]
+            });
+
+            table.setData(queueData);
+        }
+
+        init();
+    </script>
+</body>
+</html>

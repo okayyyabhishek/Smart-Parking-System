@@ -1,11 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin Portal - Smart Parking</title>
+    <meta name="color-scheme" content="light dark">
+    <title>Super Admin Dashboard — Smart Parking Allocation System</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-admin.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
 </head>
 <body>
-    <h1>Super Admin Portal - Main Control</h1>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar" id="admin-sidebar"></aside>
+
+        <!-- Main Workspace -->
+        <div class="app-main">
+            <header class="app-topbar" id="admin-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title & Header Actions -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>Main Control Overview</h1>
+                            <span class="dsa-badge">Full System Control · Pure Java 21 JPA &amp; DSA</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">Real-time facility telemetry, administrative shortcuts, and system-wide activity.</p>
+                    </div>
+
+                    <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+                        <a href="/admin/slots.html?openAdd=true" class="btn btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Add Parking Bay</span>
+                        </a>
+                        <a href="/admin/entry.html" class="btn btn-secondary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 8 8 12 12 16"></polyline><line x1="16" y1="12" x2="8" y2="12"></line></svg>
+                            <span>Park Vehicle</span>
+                        </a>
+                        <button type="button" onclick="window.openExitModal()" class="btn btn-secondary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            <span>Release Bay</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Metric Cards -->
+                <section aria-labelledby="kpi-heading">
+                    <h2 id="kpi-heading" class="sr-only">Key Operational Metrics</h2>
+                    <div class="kpi-grid">
+                        <div class="kpi-card highlight">
+                            <span class="kpi-label">Available Bays</span>
+                            <div class="kpi-value" id="kpi-available" style="color:var(--st-available);">—</div>
+                            <span class="kpi-subtext" id="kpi-available-sub">Ready for allocation</span>
+                        </div>
+
+                        <div class="kpi-card">
+                            <span class="kpi-label">Occupied Bays</span>
+                            <div class="kpi-value" id="kpi-occupied" style="color:var(--st-occupied);">—</div>
+                            <span class="kpi-subtext" id="kpi-occupied-sub">Active parked sessions</span>
+                        </div>
+
+                        <div class="kpi-card">
+                            <span class="kpi-label">Waiting Queue</span>
+                            <div class="kpi-value" id="kpi-waiting" style="color:var(--st-waiting);">—</div>
+                            <span class="kpi-subtext">PriorityQueue length · O(log n)</span>
+                        </div>
+
+                        <div class="kpi-card">
+                            <span class="kpi-label">Today's Traffic</span>
+                            <div class="kpi-value" id="kpi-traffic">—</div>
+                            <span class="kpi-subtext" id="kpi-traffic-sub">Entries &amp; Exits</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Exits Strip (ParkingHistoryStack · Bounded Deque LIFO) -->
+                <section style="margin-bottom:var(--space-6);" aria-labelledby="recent-exits-heading">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2);">
+                        <h3 id="recent-exits-heading" style="font-size:var(--text-base); margin:0;">Recent Exits (Stack LIFO)</h3>
+                        <span class="dsa-badge">ParkingHistoryStack · ArrayDeque · O(1) LIFO</span>
+                    </div>
+
+                    <div id="recent-exits-container" class="recent-exits-strip">
+                        <div class="text-muted" style="font-size:var(--text-xs); padding:var(--space-2);">Loading recent exits...</div>
+                    </div>
+                </section>
+
+                <!-- Live Bay Layout -->
+                <section aria-labelledby="bay-grid-heading" style="margin-bottom:var(--space-8);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3); flex-wrap:wrap; gap:var(--space-2);">
+                        <div>
+                            <h3 id="bay-grid-heading" style="margin:0;">Facility Bay Status</h3>
+                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Super Admin view: Unmasked vehicle plates and direct bay actions.</p>
+                        </div>
+                        <a href="/admin/slots.html" class="btn btn-secondary btn-sm">Full Bay Manager &amp; Maintenance →</a>
+                    </div>
+
+                    <div id="dashboard-slots-grid" class="slot-grid">
+                        <div class="text-muted" style="font-size:var(--text-sm); padding:var(--space-4);">Loading parking bays...</div>
+                    </div>
+                </section>
+
+                <!-- Recent Activity Table -->
+                <section aria-labelledby="activity-heading">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-3);">
+                        <div>
+                            <h3 id="activity-heading" style="margin:0;">Recent Activity Log</h3>
+                            <p class="text-muted" style="margin:0; font-size:var(--text-xs);">Latest 10 parking sessions across the facility.</p>
+                        </div>
+                        <a href="/admin/history.html" class="btn btn-secondary btn-sm">View Full History →</a>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <caption>Recent Parking Activity Stream</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Session</th>
+                                    <th scope="col">Vehicle</th>
+                                    <th scope="col">Owner</th>
+                                    <th scope="col">Bay</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Entry Time</th>
+                                    <th scope="col">Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-tbody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center; padding:var(--space-6); color:var(--text-muted);">
+                                        Loading recent activity...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupAdminShell } from '/js/admin/admin-shell.js';
+        import { api } from '/js/core/api.js';
+        import { formatPlate, formatDuration, formatDateTime, escapeHtml } from '/js/core/format.js';
+
+        async function init() {
+            await setupAdminShell('dashboard');
+            await loadDashboardData();
+        }
+
+        async function loadDashboardData() {
+            try {
+                const [dash, recentExits, slots] = await Promise.all([
+                    api.get('/api/admin/dashboard'),
+                    api.get('/api/admin/parking/recent-exits'),
+                    api.get('/api/admin/slots')
+                ]);
+
+                // Render KPIs
+                document.getElementById('kpi-available').textContent = dash.availableSlots;
+                document.getElementById('kpi-available-sub').textContent = `${dash.availableSlots} of ${dash.totalSlots} bays open`;
+
+                document.getElementById('kpi-occupied').textContent = dash.occupiedSlots;
+                const occRate = dash.totalSlots > 0 ? Math.round((dash.occupiedSlots / dash.totalSlots) * 100) : 0;
+                document.getElementById('kpi-occupied-sub').textContent = `${occRate}% occupancy rate`;
+
+                document.getElementById('kpi-waiting').textContent = dash.waitingVehicles;
+                document.getElementById('kpi-traffic').textContent = dash.todaysEntries + dash.todaysExits;
+                document.getElementById('kpi-traffic-sub').textContent = `In: ${dash.todaysEntries} | Out: ${dash.todaysExits}`;
+
+                // Render Recent Exits
+                renderRecentExits(recentExits);
+
+                // Render Live Slot Grid
+                renderSlotsGrid(slots);
+
+                // Render Recent Activity
+                renderActivity(dash.recentActivity);
+
+            } catch (err) {
+                console.error('Failed to load admin dashboard', err);
+            }
+        }
+
+        function renderRecentExits(exits) {
+            const container = document.getElementById('recent-exits-container');
+            if (!container) return;
+
+            if (!exits || exits.length === 0) {
+                container.innerHTML = `<div class="text-muted" style="font-size:var(--text-xs); padding:var(--space-2);">No departures recorded yet today.</div>`;
+                return;
+            }
+
+            container.innerHTML = exits.slice(0, 8).map(exit => `
+                <div class="exit-chip">
+                    <span class="plate-tag" style="font-size:0.75rem; padding:1px 5px;">${escapeHtml(formatPlate(exit.vehicleNumber))}</span>
+                    <span style="color:var(--text-muted);">Slot ${escapeHtml(exit.slotNumber)}</span>
+                    <span class="dsa-badge" style="font-size:0.65rem;">${escapeHtml(formatDuration(exit.durationSeconds))}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderSlotsGrid(slots) {
+            const container = document.getElementById('dashboard-slots-grid');
+            if (!container) return;
+
+            if (!slots || slots.length === 0) {
+                container.innerHTML = `<div class="text-muted">No parking bays configured.</div>`;
+                return;
+            }
+
+            container.innerHTML = slots.map(slot => {
+                const isOccupied = slot.status === 'OCCUPIED';
+                const isMaint = slot.status === 'MAINTENANCE';
+
+                return `
+                    <div class="slot-tile ${isMaint ? 'maintenance' : ''}">
+                        <div class="slot-tile-header">
+                            <span class="slot-id">${escapeHtml(slot.slotNumber)}</span>
+                            <span class="slot-type-badge ${escapeHtml(slot.slotType)}">${escapeHtml(slot.slotType)}</span>
+                        </div>
+
+                        <div class="slot-tile-body">
+                            ${isOccupied && slot.currentVehicleNumber ? `
+                                <div style="margin-bottom:var(--space-1);">
+                                    <span class="plate-tag">${escapeHtml(formatPlate(slot.currentVehicleNumber))}</span>
+                                </div>
+                                <div style="font-size:var(--text-xs); color:var(--text-muted);">${escapeHtml(slot.currentOwnerName || 'Occupant')}</div>
+                            ` : `
+                                <div class="status-chip ${escapeHtml(slot.status)}">
+                                    <span class="status-dot"></span>
+                                    <span>${escapeHtml(slot.status)}</span>
+                                </div>
+                            `}
+                        </div>
+
+                        <div class="slot-tile-footer">
+                            <span class="text-muted">Zone ${escapeHtml(slot.zone)} · F${escapeHtml(slot.floor)}</span>
+                            ${isOccupied ? `
+                                <button type="button" class="btn btn-secondary btn-sm" style="font-size:0.7rem; padding:0 6px; min-height:26px;" onclick="window.openExitModal('${escapeHtml(slot.currentVehicleNumber)}', () => location.reload())">
+                                    Exit
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderActivity(activities) {
+            const tbody = document.getElementById('activity-tbody');
+            if (!tbody) return;
+
+            if (!activities || activities.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:var(--space-4); color:var(--text-muted);">No recent activity recorded.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = activities.map(act => {
+                const isAct = act.status === 'ACTIVE';
+                return `
+                    <tr>
+                        <td class="font-mono text-muted">#${act.id}</td>
+                        <td><span class="plate-tag" style="font-size:0.75rem;">${escapeHtml(formatPlate(act.vehicleNumber))}</span></td>
+                        <td>${escapeHtml(act.ownerName || '—')}</td>
+                        <td class="font-mono" style="font-weight:700;">${escapeHtml(act.slotNumber || '—')}</td>
+                        <td>
+                            <span class="status-chip ${isAct ? 'OCCUPIED' : 'AVAILABLE'}">
+                                <span class="status-dot"></span>
+                                <span>${isAct ? 'PARKED' : 'DEPARTED'}</span>
+                            </span>
+                        </td>
+                        <td style="font-size:var(--text-xs);">${formatDateTime(act.entryTime)}</td>
+                        <td class="font-mono" style="font-size:var(--text-xs);">${act.durationFormatted || 'Active'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        init();
+    </script>
 </body>
 </html>

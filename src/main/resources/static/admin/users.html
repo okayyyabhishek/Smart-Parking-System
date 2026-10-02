@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>User Management — Smart Parking Allocation System</title>
+    
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/portal-admin.css">
+
+    <!-- Flash-free theme initialization -->
+    <script type="module" src="/js/core/theme.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-shell">
+        <aside class="app-sidebar" id="admin-sidebar"></aside>
+
+        <div class="app-main">
+            <header class="app-topbar" id="admin-topbar"></header>
+
+            <main class="content-body" id="main-content">
+                <!-- Page Title & Header Actions -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-1);">
+                            <h1>User &amp; Access Governance</h1>
+                            <span class="dsa-badge">Role-Based Access Control · BCrypt &amp; Session Guard</span>
+                        </div>
+                        <p class="text-muted" style="margin:0;">Create operator and viewer accounts, manage credentials, and toggle login authorization.</p>
+                    </div>
+
+                    <button type="button" id="open-create-user-btn" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Add New User</span>
+                    </button>
+                </div>
+
+                <!-- Governance Note -->
+                <div style="background-color:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-1);">
+                        <strong style="font-size:var(--text-sm);">Security Policy &amp; Account Protection:</strong>
+                        <span class="dsa-badge">Last Admin Invariant</span>
+                    </div>
+                    <p style="font-size:var(--text-xs); color:var(--text-muted); margin:0; line-height:1.5;">
+                        Accounts can be temporarily suspended without deleting audit history. The system strictly forbids disabling the last remaining active <code>SUPER_ADMIN</code> to prevent administrative lockout.
+                    </p>
+                </div>
+
+                <!-- Filter & Search Toolbar -->
+                <div style="background-color:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-4); margin-bottom:var(--space-6); display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; justify-content:space-between;">
+                    <div style="display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; flex:1;">
+                        <input type="text" id="user-search-input" class="form-input" placeholder="Search by username..." style="width:260px;">
+                        
+                        <select id="user-role-filter" class="form-select" aria-label="Filter by Role">
+                            <option value="">All Roles</option>
+                            <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                            <option value="OPERATOR">OPERATOR</option>
+                            <option value="VIEWER">VIEWER</option>
+                        </select>
+
+                        <select id="user-status-filter" class="form-select" aria-label="Filter by Status">
+                            <option value="">All Statuses</option>
+                            <option value="true">Active Only</option>
+                            <option value="false">Disabled Only</option>
+                        </select>
+                    </div>
+
+                    <div id="users-count-badge" class="dsa-badge">
+                        Showing 0 users
+                    </div>
+                </div>
+
+                <!-- Users Table Container -->
+                <div id="users-table-container">
+                    <div class="text-muted" style="padding:var(--space-4);">Loading users directory...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create User Modal Dialog -->
+    <div id="create-user-modal-backdrop" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="create-user-title">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="create-user-title">Provision New System User</h3>
+                <button type="button" class="btn-icon" id="close-create-user-btn" aria-label="Close dialog">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <form id="create-user-form" novalidate>
+                <div class="modal-body">
+                    <p class="text-muted" style="margin-bottom:var(--space-4); font-size:var(--text-sm);">
+                        Assign appropriate role permissions. Credentials will be securely hashed with BCrypt.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="new-username" class="form-label">
+                            <span>Username</span>
+                            <span class="helper">3–50 characters, letters &amp; numbers</span>
+                        </label>
+                        <input type="text" id="new-username" class="form-input font-mono" required placeholder="e.g. op_northgate" minlength="3" maxlength="50" autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-role" class="form-label">
+                            <span>Assigned Role</span>
+                            <span class="helper">Determines access boundary</span>
+                        </label>
+                        <select id="new-role" class="form-select" required>
+                            <option value="OPERATOR">OPERATOR (Gate Desk admission, exits, bay viewer)</option>
+                            <option value="VIEWER">VIEWER (Read-only dashboard, masked data)</option>
+                            <option value="SUPER_ADMIN">SUPER_ADMIN (Full system control, users &amp; audit)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-password" class="form-label">
+                            <span>Initial Temporary Password</span>
+                            <span class="helper">Minimum 10 characters</span>
+                        </label>
+                        <input type="password" id="new-password" class="form-input font-mono" required minlength="10" placeholder="••••••••••••" value="Temporary@123">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:var(--space-2);">
+                        <label style="display:flex; align-items:center; gap:var(--space-2); cursor:pointer; font-size:var(--text-sm);">
+                            <input type="checkbox" id="new-must-change-pass" checked style="width:16px; height:16px;">
+                            <span>Force password change on first sign-in</span>
+                        </label>
+                    </div>
+
+                    <div id="create-user-error-msg" class="form-error" style="display:none;"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-create-user-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="confirm-create-user-btn">
+                        <span>Create User Account</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal Dialog -->
+    <div id="reset-pass-modal-backdrop" class="modal-backdrop" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="reset-pass-title">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="reset-pass-title">Reset User Password</h3>
+                <button type="button" class="btn-icon" id="close-reset-pass-btn" aria-label="Close dialog">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <form id="reset-pass-form" novalidate>
+                <div class="modal-body">
+                    <p class="text-muted" style="margin-bottom:var(--space-4); font-size:var(--text-sm);">
+                        Set a new temporary password for user <strong id="reset-pass-target-user" class="font-mono"></strong>.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="reset-pass-value" class="form-label">
+                            <span>New Temporary Password</span>
+                            <span class="helper">Minimum 10 characters</span>
+                        </label>
+                        <input type="text" id="reset-pass-value" class="form-input font-mono" required minlength="10" value="Temp@Pass1234">
+                    </div>
+
+                    <div id="reset-pass-error-msg" class="form-error" style="display:none;"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-reset-pass-btn">Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="confirm-reset-pass-btn">
+                        <span>Apply New Password</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module">
+        import { setupAdminShell } from '/js/admin/admin-shell.js';
+        import { api } from '/js/core/api.js';
+        import { DataTable } from '/js/core/table.js';
+        import { toast } from '/js/core/toast.js';
+        import { formatDateTime, escapeHtml } from '/js/core/format.js';
+
+        let allUsers = [];
+        let dataTable = null;
+        let targetResetUsername = null;
+
+        async function init() {
+            await setupAdminShell('users');
+            setupFilters();
+            setupCreateUserModal();
+            setupResetPasswordModal();
+            await loadUsers();
+        }
+
+        async function loadUsers() {
+            try {
+                allUsers = await api.get('/api/admin/users');
+                renderTable();
+            } catch (err) {
+                console.error('Failed to load users', err);
+            }
+        }
+
+        function getFilteredUsers() {
+            const query = (document.getElementById('user-search-input').value || '').trim().toLowerCase();
+            const roleFilter = document.getElementById('user-role-filter').value;
+            const statusFilter = document.getElementById('user-status-filter').value;
+
+            return allUsers.filter(u => {
+                if (roleFilter && u.role !== roleFilter) return false;
+                if (statusFilter !== '' && String(u.enabled) !== statusFilter) return false;
+                if (query && !u.username.toLowerCase().includes(query)) return false;
+                return true;
+            });
+        }
+
+        function renderTable() {
+            const container = document.getElementById('users-table-container');
+            if (!container) return;
+
+            const filtered = getFilteredUsers();
+            document.getElementById('users-count-badge').textContent = `Showing ${filtered.length} of ${allUsers.length} accounts`;
+
+            if (!dataTable) {
+                dataTable = new DataTable({
+                    container,
+                    caption: 'System User Directory & Access Control',
+                    dsaAnnotation: 'Role-Based Access Control · BCrypt & Session Guard',
+                    emptyMessage: 'No matching user accounts found.',
+                    columns: [
+                        {
+                            key: 'id',
+                            label: 'ID',
+                            sortable: true,
+                            render: (val) => `<span class="font-mono text-muted">#${val}</span>`
+                        },
+                        {
+                            key: 'username',
+                            label: 'Username',
+                            sortable: true,
+                            render: (val) => `<span class="font-mono" style="font-weight:700;">${escapeHtml(val)}</span>`
+                        },
+                        {
+                            key: 'role',
+                            label: 'Role',
+                            sortable: true,
+                            render: (val) => {
+                                const cls = val === 'SUPER_ADMIN' ? 'admin' : val.toLowerCase();
+                                return `<span class="role-badge ${cls}">${escapeHtml(val)}</span>`;
+                            }
+                        },
+                        {
+                            key: 'enabled',
+                            label: 'Access Status',
+                            sortable: true,
+                            render: (val) => val 
+                                ? `<span class="user-status-pill active">● Active</span>`
+                                : `<span class="user-status-pill disabled">○ Disabled</span>`
+                        },
+                        {
+                            key: 'mustChangePassword',
+                            label: 'Password Flag',
+                            render: (val) => val 
+                                ? `<span class="dsa-badge" style="color:var(--st-waiting); font-size:0.65rem;">Reset Required</span>`
+                                : `<span class="text-muted" style="font-size:0.75rem;">Normal</span>`
+                        },
+                        {
+                            key: 'createdAt',
+                            label: 'Created Date',
+                            sortable: true,
+                            render: (val) => `<span style="font-size:var(--text-xs);">${formatDateTime(val)}</span>`
+                        },
+                        {
+                            key: 'actions',
+                            label: 'Account Control',
+                            render: (_, row) => {
+                                const toggleBtn = row.enabled
+                                    ? `<button type="button" class="btn btn-secondary btn-sm" style="color:var(--st-occupied);" onclick="toggleUserEnabled('${escapeHtml(row.username)}', false)">Disable</button>`
+                                    : `<button type="button" class="btn btn-secondary btn-sm" style="color:var(--st-available);" onclick="toggleUserEnabled('${escapeHtml(row.username)}', true)">Enable</button>`;
+                                
+                                const resetBtn = `<button type="button" class="btn btn-secondary btn-sm" onclick="openResetPasswordModal('${escapeHtml(row.username)}')">Reset Password</button>`;
+
+                                return `<div style="display:flex; gap:6px;">${toggleBtn}${resetBtn}</div>`;
+                            }
+                        }
+                    ]
+                });
+            }
+
+            dataTable.setData(filtered);
+        }
+
+        window.toggleUserEnabled = async function(username, enabled) {
+            const actionText = enabled ? 'enable' : 'disable';
+            if (!enabled) {
+                const confirmed = confirm(`Are you sure you want to disable user "${username}"? They will be immediately blocked from signing in.`);
+                if (!confirmed) return;
+            }
+
+            try {
+                await api.post(`/api/admin/users/${encodeURIComponent(username)}/enabled?enabled=${enabled}`);
+                toast.success(`User "${username}" ${enabled ? 'enabled' : 'disabled'} successfully.`, 'Access Updated');
+                await loadUsers();
+            } catch (err) {
+                toast.error(err.message || `Failed to ${actionText} user.`, 'Operation Denied');
+            }
+        };
+
+        window.openResetPasswordModal = function(username) {
+            targetResetUsername = username;
+            document.getElementById('reset-pass-target-user').textContent = username;
+            document.getElementById('reset-pass-value').value = 'Temp@Pass1234';
+            document.getElementById('reset-pass-error-msg').style.display = 'none';
+            document.getElementById('reset-pass-modal-backdrop').style.display = 'flex';
+        };
+
+        function setupFilters() {
+            document.getElementById('user-search-input').addEventListener('input', () => renderTable());
+            document.getElementById('user-role-filter').addEventListener('change', () => renderTable());
+            document.getElementById('user-status-filter').addEventListener('change', () => renderTable());
+        }
+
+        function setupCreateUserModal() {
+            const openBtn = document.getElementById('open-create-user-btn');
+            const modal = document.getElementById('create-user-modal-backdrop');
+            const closeBtn = document.getElementById('close-create-user-btn');
+            const cancelBtn = document.getElementById('cancel-create-user-btn');
+            const form = document.getElementById('create-user-form');
+            const errorMsg = document.getElementById('create-user-error-msg');
+            const submitBtn = document.getElementById('confirm-create-user-btn');
+
+            openBtn.addEventListener('click', () => {
+                errorMsg.style.display = 'none';
+                modal.style.display = 'flex';
+                setTimeout(() => document.getElementById('new-username').focus(), 50);
+            });
+
+            const closeModal = () => {
+                modal.style.display = 'none';
+                errorMsg.style.display = 'none';
+            };
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorMsg.style.display = 'none';
+
+                const username = document.getElementById('new-username').value.trim();
+                const role = document.getElementById('new-role').value;
+                const password = document.getElementById('new-password').value;
+                const mustChangePassword = document.getElementById('new-must-change-pass').checked;
+
+                if (!username || username.length < 3) {
+                    errorMsg.textContent = 'Username must be at least 3 characters.';
+                    errorMsg.style.display = 'flex';
+                    return;
+                }
+
+                if (!password || password.length < 10) {
+                    errorMsg.textContent = 'Password must be at least 10 characters.';
+                    errorMsg.style.display = 'flex';
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Creating Account...';
+
+                try {
+                    await api.post('/api/admin/users', {
+                        username,
+                        password,
+                        role,
+                        mustChangePassword
+                    });
+
+                    closeModal();
+                    toast.success(`User "${username}" created with role ${role}!`, 'Account Provisioned');
+                    form.reset();
+                    await loadUsers();
+                } catch (err) {
+                    errorMsg.textContent = err.message || 'Failed to create user. Please check if username already exists.';
+                    errorMsg.style.display = 'flex';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<span>Create User Account</span>`;
+                }
+            });
+        }
+
+        function setupResetPasswordModal() {
+            const modal = document.getElementById('reset-pass-modal-backdrop');
+            const closeBtn = document.getElementById('close-reset-pass-btn');
+            const cancelBtn = document.getElementById('cancel-reset-pass-btn');
+            const form = document.getElementById('reset-pass-form');
+            const errorMsg = document.getElementById('reset-pass-error-msg');
+            const submitBtn = document.getElementById('confirm-reset-pass-btn');
+
+            const closeModal = () => {
+                modal.style.display = 'none';
+                errorMsg.style.display = 'none';
+            };
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorMsg.style.display = 'none';
+
+                const password = document.getElementById('reset-pass-value').value;
+                if (!password || password.length < 10) {
+                    errorMsg.textContent = 'Password must be at least 10 characters.';
+                    errorMsg.style.display = 'flex';
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Resetting...';
+
+                try {
+                    await api.post(`/api/admin/users/${encodeURIComponent(targetResetUsername)}/reset-password`, { password });
+                    closeModal();
+                    toast.success(`Password for "${targetResetUsername}" reset successfully! User will be required to change password upon sign in.`, 'Password Reset');
+                    await loadUsers();
+                } catch (err) {
+                    errorMsg.textContent = err.message || 'Failed to reset password.';
+                    errorMsg.style.display = 'flex';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<span>Apply New Password</span>`;
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -64,6 +64,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiError> handleIllegalStateException(IllegalStateException ex) {
+        log.warn("Operation conflict / illegal state: {}", ex.getMessage());
+        ApiError error = ApiError.of(HttpStatus.CONFLICT.value(), "CONFLICT", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Invalid argument: {}", ex.getMessage());
+        ApiError error = ApiError.of(HttpStatus.BAD_REQUEST.value(), "INVALID_INPUT", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex) {
         // Internal errors are logged with full trace on server side, but client receives generic safe message
