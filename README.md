@@ -52,10 +52,10 @@ The interface is designed around a road-signage-inspired visual language with a 
 
 ## 🖼️ Interface Preview
 
-The application includes a sign-in screen and a Super Admin dashboard for facility monitoring and operations.
+The application includes a secure role-based sign-in screen and a Super Admin dashboard for facility monitoring and parking operations.
 
 <div align="center">
-  <img src="screenshots/smart-parking-login.png" alt="Smart Parking login interface" width="90%" />
+  <img src="screenshots/Screenshot%202026-10-18%20095556.png" alt="Smart Parking login interface" width="90%" />
   <br />
   <em>Secure sign-in for Super Admin, Operator, and Viewer roles.</em>
 </div>
@@ -63,12 +63,10 @@ The application includes a sign-in screen and a Super Admin dashboard for facili
 <br />
 
 <div align="center">
-  <img src="screenshots/smart-parking-dashboard.png" alt="Smart Parking administration dashboard" width="90%" />
+  <img src="screenshots/Screenshot%202026-10-18%20092756.png" alt="Smart Parking administration dashboard" width="90%" />
   <br />
   <em>Super Admin dashboard showing bay availability, occupancy, waiting queue, and facility actions.</em>
 </div>
-
-> **Screenshot files:** Add the two PNG files to the `screenshots/` folder using the exact names shown above.
 ---
 
 ## ✨ Feature Highlights
