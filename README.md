@@ -1,286 +1,328 @@
-# Smart Parking Allocation System
+<!--
+  Smart Parking Allocation System
+  Repository: https://github.com/okayyyabhishek/Smart-Parking-System
+-->
 
-> **Course:** Data Structure and Algorithms (Summer Training, Board Infinity)  
-> **Student:** Suhani Parashar  
-> **Technology Stack:** Java 21, Spring Boot 3.3.2, Spring Data JPA, Spring Security, H2 Database, Vanilla HTML5/CSS3/ES Modules.  
-> **Core Principle:** *"A vehicle never chooses its own slot."* Algorithmic server-side validation, allocation, queuing, and automatic reallocation.
+<div align="center">
 
----
+  <h1>🅿️ Smart Parking Allocation System</h1>
+  <p><strong>Intelligent bay allocation. Priority-based queues. Automatic reallocation.</strong></p>
+  <p>A role-separated parking management application built with Java 21 and Spring Boot, with core Data Structures & Algorithms driving the allocation workflow.</p>
 
-## Table of Contents
-1. [Project Overview](#1-project-overview)
-2. [Role-Separated Architecture & Security Hierarchy](#2-role-separated-architecture--security-hierarchy)
-3. [Data Structures & Algorithms (DSA) Map (Viva Defense)](#3-data-structures--algorithms-dsa-map-viva-defense)
-4. [Central Smart Feature: Automatic Reallocation](#4-central-smart-feature-automatic-reallocation)
-5. [Setup & Running Instructions](#5-setup--running-instructions)
-6. [Seed Accounts & Credentials](#6-seed-accounts--credentials)
-7. [Step-by-Step Viva / Demo Walkthrough](#7-step-by-step-viva--demo-walkthrough)
-8. [QA Test Case Verification Matrix (Real Results)](#8-qa-test-case-verification-matrix-real-results)
-9. [Known Limitations](#9-known-limitations)
-10. [Viva Defense Q&A Cheat Sheet](#10-viva-defense-qa-cheat-sheet)
+  <p>
+    <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21" />
+    <img src="https://img.shields.io/badge/Spring%20Boot-3.3.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot 3.3.2" />
+    <img src="https://img.shields.io/badge/Spring%20Security-RBAC-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white" alt="Spring Security" />
+    <img src="https://img.shields.io/badge/Database-H2-4479A1?style=for-the-badge&logo=databricks&logoColor=white" alt="H2 Database" />
+    <img src="https://img.shields.io/badge/Frontend-Vanilla%20JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="Vanilla JavaScript" />
+  </p>
 
----
+  <p>
+    <a href="https://github.com/okayyyabhishek/Smart-Parking-System"><strong>Explore Repository</strong></a>
+    ·
+    <a href="https://github.com/okayyyabhishek/Smart-Parking-System/issues">Report a Bug</a>
+    ·
+    <a href="https://github.com/okayyyabhishek/Smart-Parking-System/issues">Request a Feature</a>
+  </p>
 
-## 1. Project Overview
-
-The **Smart Parking Allocation System** is an algorithmic, production-hardened local web application that automates parking lot operations with mathematical guarantees. The facility enforces strict server-side rules:
-
-- Drivers and operators **never pick parking bays manually**.
-- Compatibility is verified **before priority**. A high-priority vehicle is never placed in an incompatible bay (e.g., an SUV is never assigned to a small compact slot).
-- If no compatible bay is free, the vehicle enters an in-memory **PriorityQueue** ordered by priority level (`EMERGENCY > HIGH > NORMAL`) and FIFO arrival sequence.
-- When an occupied bay is vacated, the engine performs **Automatic Reallocation** by popping the highest-priority compatible vehicle from the waiting queue and assigning the slot immediately.
-- The UI follows a bespoke, accessible design system inspired by highway signage and road markings (Highway Gothic typography, slate road surfaces `#121417`, curb cream `#F3F0E8`, and road marking yellow `#F2B705`) with zero external frameworks and zero AI fonts.
+</div>
 
 ---
 
-## 2. Role-Separated Architecture & Security Hierarchy
+## 🚦 Overview
 
-To guarantee data privacy (PII protection) and operational control, the system implements a strict three-tier role hierarchy:
+**Smart Parking Allocation System** streamlines parking operations through server-side allocation rules and classic data structures. Instead of letting users choose any bay, the system evaluates vehicle compatibility, ranks available bays, and assigns the best eligible slot. When no compatible bay is available, the vehicle is placed in a priority-aware waiting queue.
 
+The interface is designed around a road-signage-inspired visual language with a dark road palette, warm curb tones, and signal yellow accents.
+
+### What makes it useful?
+
+- **Automatic bay allocation** — compatible available bays are selected by the allocation engine.
+- **Compatibility before priority** — priority never overrides physical bay suitability.
+- **Priority-aware waiting queue** — emergency/high/normal priority ordering, with FIFO ordering for vehicles at the same priority.
+- **Automatic reallocation** — when a vehicle exits, the engine searches the queue and allocates the released bay to the first compatible waiting vehicle.
+- **Role-separated portals** — dedicated views for Super Admin, Operator, and Viewer.
+- **Privacy-aware responses** — role-specific DTOs and masked vehicle details in restricted/public views.
+- **Audit visibility** — administrative audit events and CSV export.
+- **DSA-focused architecture** — HashMap, PriorityQueue, deque-based stack/queue, filtering, and comparators are used for clear algorithmic behavior.
+
+> **Core principle:** A vehicle never chooses its own slot. The server validates compatibility and owns the allocation decision.
+
+---
+
+## 🖼️ Interface Preview
+
+The application includes a sign-in screen and a Super Admin dashboard for facility monitoring and operations.
+
+<div align="center">
+  <img src="https://github.com/okayyyabhishek/Smart-Parking-System/raw/main/assets/smart-parking-login.png" alt="Smart Parking login interface" width="80%" />
+  <br />
+  <sub>Login screen — replace this image URL with the actual repository path if your screenshot is stored elsewhere.</sub>
+</div>
+
+<div align="center">
+  <img src="https://github.com/okayyyabhishek/Smart-Parking-System/raw/main/assets/smart-parking-dashboard.png" alt="Smart Parking administration dashboard" width="80%" />
+  <br />
+  <sub>Super Admin dashboard — live bay status, occupancy overview, waiting queue, and facility actions.</sub>
+</div>
+
+---
+
+## ✨ Feature Highlights
+
+| Feature | How it works |
+|---|---|
+| 🅿️ Smart allocation | Filters bays by vehicle compatibility before ranking candidate slots. |
+| 🚙 Vehicle compatibility | Supports NORMAL, EV, LARGE, and ACCESSIBLE bay preferences and restrictions. |
+| ⏳ Waiting queue | Uses a priority queue with FIFO sequencing among vehicles of equal priority. |
+| 🔁 Automatic reallocation | A released bay can be assigned to the first compatible waiting vehicle. |
+| 📊 Operations dashboard | Summarizes bay availability, occupancy, waiting vehicles, and traffic counters. |
+| 🧑‍💼 Role-based access | Separates Super Admin, Operator, and Viewer access. |
+| 🔐 Privacy controls | Masks sensitive vehicle details in restricted views and uses role-specific DTOs. |
+| 🧾 Session history | Captures parking entry/exit information and maintains recent-exit history. |
+| 🛠️ Maintenance mode | Prevents bays marked for maintenance from being assigned. |
+| 📋 Audit log | Records key operations; administrators can export audit data as CSV. |
+| 🌗 UI theme | Road-inspired interface with a high-contrast yellow accent palette. |
+
+---
+
+## 👥 Access Model
+
+The application separates access by operational responsibility.
+
+| Role | Intended use | Access area |
+|---|---|---|
+| **SUPER_ADMIN** | Facility oversight, bay and user management, audit logs, maintenance | `/admin/**` |
+| **OPERATOR** | Gate entry/exit, bay operations, waiting queue | `/operator/**` |
+| **VIEWER** | Read-only bay and status information | `/viewer/**` |
+
+Security protections documented by the project include role-specific controllers and DTOs, masked vehicle/contact details in restricted views, session expiry, failed-login lockout, and structured validation errors.
+
+> The demo credentials below are for local development only. Change or disable seeded credentials before exposing the application to any network.
+
+---
+
+## 🧠 Data Structures & Algorithms
+
+DSA is part of the system's core behavior, not just documentation.
+
+| Data structure / algorithm | Use case | Typical complexity |
+|---|---|---|
+| **HashMap** | Vehicle lookup and duplicate detection by normalized plate | Average lookup: **O(1)** |
+| **PriorityQueue (binary heap)** | Priority-based waiting queue | Enqueue / poll: **O(log n)**; peek: **O(1)** |
+| **ArrayDeque as Stack** | Recent exit history using LIFO behavior | Push / pop: **O(1)** |
+| **ArrayDeque as Queue** | FIFO sequence for equal-priority queue demonstrations | Add / remove at ends: **O(1)** |
+| **Linear search** | Slot-search DSA demonstration | Search: **O(n)** |
+| **Compatibility filtering + comparator** | Filters valid bays and ranks candidates | Filter: **O(n)**; sorting candidates: **O(m log m)** |
+
+### Vehicle-to-bay compatibility
+
+- **CAR:** prefers a NORMAL bay; may fall back to LARGE.
+- **EV:** prefers an EV charging bay; may fall back to NORMAL.
+- **SUV:** requires a LARGE bay.
+- **ACCESSIBLE:** prefers an ACCESSIBLE bay; may fall back to NORMAL.
+- **MAINTENANCE / OCCUPIED:** never eligible for a new allocation.
+
+### Allocation lifecycle
+
+```text
+Vehicle arrives
+     │
+     ▼
+Normalize & validate vehicle details
+     │
+     ▼
+Find available, compatible bays
+     │
+     ├── Compatible bay exists ──► Rank candidates ──► Allocate bay
+     │
+     └── No compatible bay ──────► Add to priority queue
+                                               │
+                                               ▼
+Vehicle exits ◄── Session closes ◄── Compatible waiting vehicle receives released bay
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 SUPER_ADMIN (Main Control)                  │
-│  /admin/**  — Full Control, Bays, Users, Audit Logs (CSV)   │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-┌──────────────────────────────▼──────────────────────────────┐
-│                    OPERATOR (Gate Desk)                     │
-│  /operator/** — Entry/Exit Gate, Bays, Masked Contact DTOs  │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-┌──────────────────────────────▼──────────────────────────────┐
-│                     VIEWER (Public Board)                   │
-│  /viewer/** — Read-Only Live Bays, Zero PII (Masked Plates) │
-└─────────────────────────────────────────────────────────────┘
-```
 
-### Security & Hardening Controls
-- **Role Isolation:** Each role has dedicated controllers, services, URL prefixes, and **distinct DTO classes**. Entities are never exposed directly to clients.
-- **Zero-PII Public Board:** Viewer APIs and UI never return `ownerName`, `contact`, or raw license plates (`PB10••1234` format only).
-- **Operator Masking:** Operator endpoints display masked contacts (`••••••3210`) preserving only the last 4 digits.
-- **Brute-Force Lockout:** Any account with 5 consecutive failed login attempts is automatically locked for 5 minutes (`HTTP 423 Locked`).
-- **Session Expiry & Idempotency:** Spring Security session cookie (`JSESSIONID`, `HttpOnly`, `SameSite=Strict`) expires after 30 minutes of inactivity. Frontend displays a clean session-expired notification banner on `/login.html?expired=true`.
-- **Friendly Validation:** No Java exception stack traces ever reach the client (`GlobalExceptionHandler` transforms exceptions into structured JSON error envelopes with code and field errors).
-- **Custom Error Pages:** Dedicated `/403.html` (Restricted Area) and `/404.html` (Route Not Found) styled with highway signage aesthetics.
+### Automatic reallocation
+
+When a vehicle exits, the application closes the parking session, records the exit, releases the bay, and checks waiting vehicles for compatibility. An incompatible queue entry is not supposed to be assigned to an unsuitable bay; the engine searches for an eligible vehicle and preserves deferred queue entries.
 
 ---
 
-## 3. Data Structures & Algorithms (DSA) Map (Viva Defense)
+## 🧰 Tech Stack
 
-All core data structures reside in the isolated package `com.smartparking.ds`, completely decoupled from JPA entities and Spring Web annotations.
-
-| Data Structure / Algorithm | Class Name | Time Complexity | Space Complexity | Where Used in UI & System | Viva Rationale / Justification |
-|---|---|---|---|---|---|
-| **HashMap** | `VehicleLookupManager` | Search: **O(1)**<br>Insert: **O(1)** | **O(v)** | Operator vehicle lookup, search bar, duplicate detection | Instant O(1) lookup by normalized alphanumeric license plate (`PB10AB1234`), avoiding expensive full table scans. |
-| **PriorityQueue** (Binary Heap) | `WaitingVehiclePriorityQueue` | Enqueue: **O(log k)**<br>Peek: **O(1)**<br>Poll: **O(log k)** | **O(k)** | Waiting bay queue display, Gate allocation fallback | Enforces priority dispatching (`EMERGENCY > HIGH > NORMAL`) with FIFO fallback for equal priority vehicles using a custom `Comparator`. |
-| **ArrayDeque as Stack** (LIFO) | `ParkingHistoryStack` | Push: **O(1)**<br>Pop: **O(1)**<br>Snapshot: **O(s)** | **O(s)** (Capped at 50) | Operator "Recent Exits" drawer, Dashboard quick view | Demonstrates Last-In-First-Out behavior: the vehicle that exited most recently is immediately visible at the top of the history feed. |
-| **Linear Search** | `SlotSearchManager` | Find: **O(n)** | **O(1)** | Slot lookup demo in `ds/` package | Deliberately included to contrast theoretical **O(n)** linear scanning against HashMap **O(1)** direct indexing during viva examination. |
-| **Custom Comparator** & Filtering | `ParkingAllocationManager` + `SlotRankComparator` | Filter: **O(n)**<br>Sort: **O(m log m)** | **O(m)** | Gate Entry automatic bay assignment | Implements the compatibility matrix and ranks compatible slots by preference (exact type > compatible fallback > lowest slot number). |
-| **ArrayDeque as Queue** (FIFO) | `EqualPriorityFifoQueueDemoTest` | Enqueue: **O(1)**<br>Dequeue: **O(1)** | **O(q)** | Core DSA demonstration suite | Proves fair first-come, first-served queue semantics when vehicles share identical priority levels. |
-
-### Vehicle-to-Slot Compatibility Matrix
-1. **CAR:** Prefers `NORMAL`; falls back to `LARGE`.
-2. **EV:** Prefers `EV` (charging bay); falls back to `NORMAL`.
-3. **SUV:** Allowed **only** in `LARGE` (physical clearance requirement).
-4. **ACCESSIBLE:** Prefers `ACCESSIBLE` (wide aisle, ramp proximity); falls back to `NORMAL`.
-5. **MAINTENANCE / OCCUPIED:** **Never** assigned under any circumstance.
+| Layer | Technology |
+|---|---|
+| Language | Java 21 |
+| Backend framework | Spring Boot 3.3.2 |
+| Persistence | Spring Data JPA |
+| Authentication / authorization | Spring Security |
+| Database | H2 |
+| Frontend | HTML5, CSS3, JavaScript ES Modules |
+| Build tool | Apache Maven / Maven Wrapper |
+| Testing | JUnit-based automated test suites |
 
 ---
 
-## 4. Central Smart Feature: Automatic Reallocation
-
-When a vehicle exits the facility, the released slot does not simply sit idle:
-
-```
-[Vehicle Exits] ──► [Release Bay A-04 (LARGE)]
-                           │
-                           ▼
-             [Inspect Waiting PriorityQueue]
-                           │
-             ┌─────────────┴─────────────┐
-             ▼                           ▼
-[Head is Incompatible (CAR)]    [Head is Compatible (SUV)]
-             │                           │
-  [Temporarily Defer Head]               ▼
-             │               [Poll SUV & Assign Bay A-04]
-             ▼                           │
-   [Find Next Compatible]                ▼
-             │               [Update Session to ACTIVE]
-             ▼                           │
-[Re-insert Deferred Entries]             ▼
-                             [Bay Marked OCCUPIED]
-```
-
-1. The exiting vehicle closes its active `ParkingSession`, records the exit timestamp, computes parking duration, and pushes an `ExitRecord` onto `ParkingHistoryStack`.
-2. `waitingQueueService.pollCompatible(releasedSlotType)` traverses the waiting priority queue.
-3. If an incompatible vehicle is at the head of the queue (e.g., a compact `CAR` waiting for a `NORMAL` bay while a `LARGE` bay is released), the algorithm **skips the incompatible vehicle without dropping it**, locates the next eligible vehicle (e.g. an `SUV`), allocates the slot, and restores the skipped vehicles in their exact original priority positions.
-4. The waiting session transitions to `ACTIVE`, the bay is marked `OCCUPIED`, and an audit trail entry is persisted.
-
----
-
-## 5. Setup & Running Instructions
+## 🚀 Getting Started
 
 ### Prerequisites
-- **Java Development Kit (JDK):** Version 21 or higher
-- **Apache Maven:** Version 3.8+ (or use the included Maven wrapper)
-- **Web Browser:** Any modern browser (Chrome, Edge, Firefox, Safari)
 
-### 1. Build and Run Tests
-Run the entire build lifecycle and execute all 92 automated tests:
+- JDK **21+**
+- Apache Maven **3.8+**, or use the included Maven Wrapper if available
+- A modern web browser
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/okayyyabhishek/Smart-Parking-System.git
+cd Smart-Parking-System
+```
+
+### 2. Run the test/build lifecycle
+
+With Maven installed:
+
 ```bash
 mvn clean verify
 ```
-*Expected result:* `BUILD SUCCESS`, 92 tests run, 0 failures, 0 errors.
 
-### 2. Launch Application
-Start the Spring Boot application using the default profile:
+If the repository contains a Maven Wrapper, use one of these commands instead:
+
+**Windows**
+```powershell
+.\mvnw.cmd clean verify
+```
+
+**macOS / Linux**
+```bash
+./mvnw clean verify
+```
+
+### 3. Start the application
+
 ```bash
 mvn spring-boot:run
 ```
-*Port:* The application runs on `http://localhost:8080`.
 
-### 3. Open in Browser
-- Landing Page / Sign In: [http://localhost:8080](http://localhost:8080) or [http://localhost:8080/login.html](http://localhost:8080/login.html)
-- Super Admin Portal: [http://localhost:8080/admin/index.html](http://localhost:8080/admin/index.html)
-- Operator Gate Portal: [http://localhost:8080/operator/index.html](http://localhost:8080/operator/index.html)
-- Viewer Public Board: [http://localhost:8080/viewer/index.html](http://localhost:8080/viewer/index.html)
+Or use the wrapper:
 
----
+**Windows**
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-## 6. Seed Accounts & Credentials
+**macOS / Linux**
+```bash
+./mvnw spring-boot:run
+```
 
-The application automatically seeds demonstration accounts on startup in `dev` and `test` profiles (via `DataSeeder.java`):
+### 4. Open the application
 
-| Username | Password | Role | Permitted Access |
-|---|---|---|---|
-| `admin` | `Admin@Pass1234` | `SUPER_ADMIN` | `/admin/**`, `/operator/**`, `/viewer/**` (Full control) |
-| `operator` | `Operator@Pass1234` | `OPERATOR` | `/operator/**`, `/viewer/**` (Gate Operations) |
-| `viewer` | `Viewer@Pass1234` | `VIEWER` | `/viewer/**` (Public read-only display) |
+When the application starts successfully, open:
 
-### Baseline Demo Parking Bays
-- `A-01` (NORMAL) — Zone A, Floor 0
-- `A-02` (NORMAL) — Zone A, Floor 0
-- `A-03` (EV) — Zone A, Floor 0 (EV Charging Station)
-- `A-04` (LARGE) — Zone A, Floor 0 (High-clearance SUV Bay)
-- `A-05` (ACCESSIBLE) — Zone A, Floor 0 (Accessible / Ramp Proximity)
+| Page | Local URL |
+|---|---|
+| Login | [http://localhost:8080/login.html](http://localhost:8080/login.html) |
+| Super Admin | [http://localhost:8080/admin/index.html](http://localhost:8080/admin/index.html) |
+| Operator | [http://localhost:8080/operator/index.html](http://localhost:8080/operator/index.html) |
+| Viewer | [http://localhost:8080/viewer/index.html](http://localhost:8080/viewer/index.html) |
 
----
-
-## 7. Step-by-Step Viva / Demo Walkthrough
-
-Follow this scripted 5-minute live demonstration for course instructors and examiners:
-
-### Step 1: Sign in as Operator
-1. Navigate to `http://localhost:8080/login.html`.
-2. Sign in with `operator` / `Operator@Pass1234`.
-3. Notice the **Operator Gate Desk** loads with 5 available bays, empty waiting queue, and Highway Gothic typography.
-
-### Step 2: Park Vehicles & Demonstrate Compatibility Allocation
-1. Click **Park Vehicle** (`/operator/entry.html`).
-2. Enter: Plate `PB10AB1234`, Type `CAR`, Priority `NORMAL`. Click **Allocate Bay**.
-   - Result: Assigned to `A-01` (Type: NORMAL).
-3. Enter: Plate `PB10XY4567`, Type `EV`, Priority `NORMAL`. Click **Allocate Bay**.
-   - Result: Assigned to `A-03` (Type: EV).
-4. Enter: Plate `PB08CD9876`, Type `SUV`, Priority `NORMAL`. Click **Allocate Bay**.
-   - Result: Assigned to `A-04` (Type: LARGE — the only compatible slot for SUV).
-
-### Step 3: Trigger the Waiting Queue & Priority Jump
-1. Attempt to enter another SUV: Plate `PB08CD2222`, Type `SUV`, Priority `NORMAL`.
-   - Result: No available LARGE bay. System displays notification: *"No compatible AVAILABLE slot. Enqueued at position #1"*.
-2. Now enter an emergency/priority SUV: Plate `PB08EM9999`, Type `SUV`, Priority `HIGH`.
-   - Result: System adds `PB08EM9999` to `WaitingVehiclePriorityQueue`.
-3. Check the **Waiting Queue** (`/operator/waiting.html`):
-   - `PB08EM9999` (HIGH) has **jumped ahead** to Position #1!
-   - `PB08CD2222` (NORMAL) is displaced to Position #2.
-
-### Step 4: Demonstrate Central Smart Feature (Automatic Reallocation)
-1. In the **Bays** view (`/operator/slots.html`), click slot `A-04` (occupied by `PB08CD9876`).
-2. Click **Process Vehicle Exit**.
-3. Observe the prompt and confirm exit.
-4. **Immediate smart reallocation occurs:**
-   - Slot `A-04` is vacated.
-   - The system automatically polls `PB08EM9999` from the queue and reallocates `A-04` to it.
-   - Waiting queue size drops by 1.
-   - The Exit drawer updates with the completed session and duration.
-
-### Step 5: Verify Privacy in the Viewer Portal
-1. Open a new Incognito / Private window and log in as `viewer` / `Viewer@Pass1234`.
-2. View the Live Bay Monitor (`/viewer/slots.html`) and History (`/viewer/history.html`).
-3. Notice:
-   - License plates are masked: `PB08••9999`.
-   - Owner names and phone numbers are **completely absent** from both DOM and network JSON responses.
-
-### Step 6: Super Admin Main Control
-1. Sign in as `admin` / `Admin@Pass1234`.
-2. Navigate to **Maintenance** (`/admin/slots.html`) and toggle Maintenance mode on slot `A-05`.
-   - Result: Bay turns into Maintenance Orange barrier mode (`MAINTENANCE`) and will never be assigned.
-3. Navigate to **Audit Logs** (`/admin/audit.html`):
-   - Inspect logged events (`PARK_ENTRY`, `PARK_EXIT`, `PARK_REALLOCATED`, `SLOT_MAINTENANCE`).
-   - Click **Export CSV** to download `audit_logs.csv`.
+If your local configuration uses a different port or context path, use the address shown in the startup logs.
 
 ---
 
-## 8. QA Test Case Verification Matrix (Real Results)
+## 🔑 Demo Accounts
 
-All test cases are verified automatically via `Phase8HardeningAndQaVerificationTest.java` and individual test suites. **No results are fabricated.**
+The repository documentation describes the following seeded accounts for development/test use:
 
-| Test # | Test Case Description | Verified Behavior / Assertion | Status | Automated Test Method |
-|---|---|---|---|---|
-| **TC-01** | Add parking slot | Unique slot `Z-99` is saved; duplicate slot numbers throw exception. | **PASS** | `testCase01_addParkingSlot` |
-| **TC-02** | Add vehicle | Vehicle accepted with normalized uppercase license plate (`dl 04 ab 9999` -> `DL04AB9999`). | **PASS** | `testCase02_addVehicle` |
-| **TC-03** | Park normal vehicle | Normal `CAR` gets allocated to lowest compatible `NORMAL` bay (`A-01`). | **PASS** | `testCase03_parkNormalVehicle` |
-| **TC-04** | Park EV | Electric vehicle prefers dedicated charging bay `A-03` (EV). | **PASS** | `testCase04_parkEV` |
-| **TC-05** | Park large vehicle | SUV gets allocated to `A-04` (LARGE); never assigned to smaller bays. | **PASS** | `testCase05_parkLargeVehicle` |
-| **TC-06** | Priority vehicle | High-priority vehicle jumps ahead of normal-priority vehicle in queue. | **PASS** | `testCase06_priorityOrdering` |
-| **TC-07** | No compatible slot | When bays are full, vehicle enters waiting PriorityQueue with position #1. | **PASS** | `testCase07_noCompatibleSlotEntersWaitingQueue` |
-| **TC-08** | Vehicle exit | Exit clears bay, marks it `AVAILABLE`, and calculates parking duration. | **PASS** | `testCase08_vehicleExit` |
-| **TC-09** | Automatic reallocation | Vehicle exit releases bay and reallocates it immediately to eligible waiting vehicle. | **PASS** | `testCase09_automaticReallocation` |
-| **TC-10** | Duplicate vehicle | Already parked vehicle receives friendly validation: *"Vehicle is already parked in slot..."*. | **PASS** | `testCase10_duplicateVehicleFriendlyMessage` |
-| **TC-11** | Invalid vehicle plate | Malformed license plate `$$$` returns `HTTP 400` with `VALIDATION_FAILED` envelope. | **PASS** | `testCase11_invalidVehicleValidationError` |
-| **TC-12** | Search vehicle | `VehicleLookupManager` `HashMap` finds vehicle in O(1) matching `pb10 ab-1234`. | **PASS** | `testCase12_searchVehicleLookup` |
-| **TC-13** | Search slot | Linear scan `SlotSearchManager` accurately locates slot `A-03` in O(n). | **PASS** | `testCase13_searchSlotLinear` |
-| **TC-14** | Sorting records | Database queries return parking slots sorted deterministically by slot number. | **PASS** | `testCase14_sortingSlotRecords` |
-| **TC-15** | Parking duration | System computes non-negative duration in seconds from entry to exit timestamps. | **PASS** | `testCase15_parkingDurationCalculation` |
-| **TC-16** | Real-time statistics | Dashboard counts (total, occupied, available, waiting) calculated from live DB data. | **PASS** | `testCase16_statisticsCalculatedFromDb` |
-| **TC-17** | Maintenance slot | Slot in `MAINTENANCE` status is strictly excluded from allocation. | **PASS** | `testCase17_maintenanceSlotNeverAssigned` |
-| **TC-18** | Viewer RBAC isolation | `VIEWER` calling `/api/admin/**` or `/api/operator/**` receives `HTTP 403 Forbidden`. | **PASS** | `testCase18_viewerCallsAdminOrOperatorApiReturns403` |
-| **TC-19** | Viewer zero-PII scan | Viewer JSON responses contain 0 occurrences of `ownerName`, `contact`, or raw plates. | **PASS** | `testCase19_viewerJsonScanZeroPii` |
-| **TC-20** | Operator contact masking | Operator endpoints mask contact numbers into `••••••3210` format. | **PASS** | `testCase20_operatorContactMasking` |
-| **TC-21** | Anonymous access protection | Unauthenticated requests to protected endpoints return `HTTP 401 Unauthorized`. | **PASS** | `testCase21_anonymousAccessReturns401` |
-| **TC-22** | Brute force lockout | 5 failed login attempts trigger `HTTP 423 Locked` for 5 minutes. | **PASS** | `testCase22_lockoutAfterFiveFailures` |
-| **TC-23** | Comprehensive audit trail | Vehicle entry and exit record structured audit rows (`PARK_ENTRY`, `PARK_EXIT`). | **PASS** | `testCase23_auditEntryOnParkExit` |
-| **TC-24** | Design system token check | Tokens CSS contains highway palette; banned generic fonts (Inter/Roboto) are absent. | **PASS** | `testCase24_themeTokensAndNoBannedFonts` |
-| **TC-25** | Smart reallocation skip | Reallocation skips incompatible head of queue and assigns slot to first compatible vehicle. | **PASS** | `testCase25_reallocationSkipsIncompatibleHead` |
+| Username | Password | Role |
+|---|---|---|
+| `admin` | `Admin@Pass1234` | SUPER_ADMIN |
+| `operator` | `Operator@Pass1234` | OPERATOR |
+| `viewer` | `Viewer@Pass1234` | VIEWER |
+
+Seed data is profile-dependent. If these accounts are unavailable, check the project's `DataSeeder.java` and active Spring profile.
+
+**Security note:** Do not use these example credentials in a deployed environment. Replace demo credentials, review profile settings, and configure production-grade secrets and persistence before deployment.
 
 ---
 
-## 9. Known Limitations
+## 🧪 Suggested End-to-End Demo
 
-In accordance with academic integrity and the course scope, the following boundaries are formally noted:
-
-1. **Hardware & Sensors:** No physical IoT geomagnetic/ultrasonic barrier sensors or loop detectors are connected. Gate arrival and departure are triggered through the web interface or REST API.
-2. **Payments & Tariffs:** Fee calculation and payment gateway integration (Razorpay/Stripe) are out of scope. The system tracks physical and temporal occupancy duration only.
-3. **Computer Vision / ANPR:** Automatic Number Plate Recognition via CCTV cameras is not implemented; vehicle numbers are entered by the operator and normalized programmatically.
-4. **Single-Node Embedded Database:** The system uses an in-memory/file-backed H2 database intended for local evaluation and defense. Production deployment would target PostgreSQL.
-5. **No Enterprise SSO:** Authentication relies on internal BCrypt password hashes and session cookies rather than SAML/OAuth2 enterprise identity providers.
+1. Sign in as **Operator** and register a vehicle with a supported type.
+2. Confirm the system selects a compatible bay rather than allowing manual bay selection.
+3. Fill the compatible bay capacity and submit another vehicle to show the waiting queue.
+4. Add a higher-priority vehicle and verify the queue order.
+5. Process a vehicle exit and check whether a compatible waiting vehicle receives the released bay.
+6. Sign in as **Viewer** and verify that the public-facing information is read-only and sensitive details are masked.
+7. Sign in as **Super Admin** to review bay maintenance controls and audit records.
 
 ---
 
-## 10. Viva Defense Q&A Cheat Sheet
+## ✅ Testing
 
-Prepare for viva questions with these concise, mathematically sound responses:
+Run the test suite before changing allocation or access-control behavior:
 
-### Q1: Why did you use a PriorityQueue instead of simply sorting an ArrayList or running a SQL ORDER BY query?
-> **Answer:** Sorting an ArrayList or querying the database takes **O(k log k)** or triggers a disk I/O scan on every check. A `PriorityQueue` maintains heap order continuously. Enqueuing takes **O(log k)** and inspecting the highest-priority vehicle takes **O(1)**. When a slot opens, the dispatch decision is instantaneous.
+```bash
+mvn clean verify
+```
 
-### Q2: Why is vehicle lookup O(1) but slot search O(n)?
-> **Answer:** Vehicle lookups happen frequently during gate entry to check for duplicate/active parking sessions. By hashing the normalized license plate into a `HashMap<String, VehicleSnapshot>`, we achieve **O(1)** average-time lookup. Conversely, slot search is kept linear **O(n)** in `SlotSearchManager` to demonstrate linear search algorithms as requested by the academic syllabus, while also fitting parking layouts where total bays (n) rarely exceed a few hundred.
+The existing project documentation describes automated coverage for allocation compatibility, priority ordering, waiting-queue behavior, vehicle exits, automatic reallocation, duplicate and malformed plates, statistics, maintenance exclusions, RBAC restrictions, masking, login lockout, and audit entries.
 
-### Q3: What happens if the server restarts while vehicles are in the waiting queue?
-> **Answer:** We implemented **startup rebuild hardening** (`WaitingQueueService.rebuildFromDatabase()`). Although the PriorityQueue lives in memory for sub-millisecond execution, all waiting states are backed by the `ParkingSession` database table. On application boot, the system queries active waiting sessions ordered by `enqueuedAt` and repopulates the PriorityQueue.
+Always use the test output from your current checkout as the source of truth for the actual number of passing tests.
 
-### Q4: How do you prevent a high-priority vehicle from taking the wrong slot?
-> **Answer:** The rule is **"Compatibility precedes priority"**. In `ParkingAllocationManager`, we first filter all available bays against the vehicle's compatibility matrix. Only compatible bays are ranked. If no compatible bay exists, the vehicle enters the waiting queue regardless of its priority.
+---
 
-### Q5: How is PII (Personally Identifiable Information) protected from public viewers?
-> **Answer:** We use **role-specific Data Transfer Objects (DTOs)** and Jackson JSON serialization filtering. The `ViewerSlotDto`, `ViewerWaitingDto`, and `ViewerVehicleDto` do not contain `ownerName` or `contact` fields. Furthermore, license plate numbers are masked into `PB10••1234` format at the mapper level before serialization.
+## ⚠️ Scope & Limitations
+
+The current project documentation identifies these boundaries:
+
+- **No connected parking sensors:** entry and exit are initiated through the web interface/API; physical IoT sensors are not integrated.
+- **No ANPR/CCTV pipeline:** vehicle plates are entered by an operator rather than recognized automatically.
+- **No payment gateway:** fee collection and online payment integration are outside the current scope.
+- **H2 database:** suitable for local evaluation; a production deployment should assess a persistent production database such as PostgreSQL.
+- **No enterprise SSO:** authentication uses the application's configured Spring Security flow rather than an enterprise identity provider.
+
+---
+
+## 🗺️ Potential Next Steps
+
+- Connect real occupancy sensors or gate hardware.
+- Add parking tariffs, invoices, and payment integration.
+- Add camera-based number-plate recognition with explicit privacy safeguards.
+- Introduce PostgreSQL migrations, backups, and deployment profiles.
+- Add CI workflows for automated build and test validation.
+- Add monitoring, structured operational metrics, and deployment documentation.
+
+These are possible future enhancements, not claims about current functionality.
+
+---
+
+## 🤝 Contributing
+
+Contributions, bug reports, and feature suggestions are welcome.
+
+1. Fork the repository.
+2. Create a focused branch: `git checkout -b feature/your-feature`
+3. Make your change and run `mvn clean verify`.
+4. Commit with a descriptive message.
+5. Open a pull request describing the change and test results.
+
+For bugs or suggestions, use [GitHub Issues](https://github.com/okayyyabhishek/Smart-Parking-System/issues).
+
+---
+
+## 📄 License
+
+No license information was confirmed from the current README. Add a `LICENSE` file and update this section before granting reuse rights.
+
+---
+
+<div align="center">
+
+  <strong>Built around a simple rule: compatibility first, priority second.</strong>
+
+  <br />
+  <sub>Smart Parking Allocation System · Java 21 · Spring Boot · Data Structures & Algorithms</sub>
+
+</div>
