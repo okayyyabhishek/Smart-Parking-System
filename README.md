@@ -55,17 +55,20 @@ The interface is designed around a road-signage-inspired visual language with a 
 The application includes a sign-in screen and a Super Admin dashboard for facility monitoring and operations.
 
 <div align="center">
-  <img src="https://github.com/okayyyabhishek/Smart-Parking-System/raw/main/assets/smart-parking-login.png" alt="Smart Parking login interface" width="80%" />
+  <img src="screenshots/smart-parking-login.png" alt="Smart Parking login interface" width="90%" />
   <br />
-  <sub>Login screen — replace this image URL with the actual repository path if your screenshot is stored elsewhere.</sub>
+  <em>Secure sign-in for Super Admin, Operator, and Viewer roles.</em>
 </div>
+
+<br />
 
 <div align="center">
-  <img src="https://github.com/okayyyabhishek/Smart-Parking-System/raw/main/assets/smart-parking-dashboard.png" alt="Smart Parking administration dashboard" width="80%" />
+  <img src="screenshots/smart-parking-dashboard.png" alt="Smart Parking administration dashboard" width="90%" />
   <br />
-  <sub>Super Admin dashboard — live bay status, occupancy overview, waiting queue, and facility actions.</sub>
+  <em>Super Admin dashboard showing bay availability, occupancy, waiting queue, and facility actions.</em>
 </div>
 
+> **Screenshot files:** Add the two PNG files to the `screenshots/` folder using the exact names shown above.
 ---
 
 ## ✨ Feature Highlights
